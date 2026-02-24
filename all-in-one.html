@@ -49,6 +49,7 @@
       <a href="#checkout-page">checkout-page.html</a>
       <a href="#auth-page">auth-page.html</a>
       <a href="#visit-us">visit-us.html</a>
+      <a href="#amai-live">amai-live-api-demo</a>
     </div>
   </nav>
   <main class="sections">
@@ -1220,5 +1221,176 @@
   </div>
 </section>
   </main>
+    <section id="amai-live" class="page-section">
+  <div class="section-head">
+    <h2>amai-live-api-demo</h2>
+    <a href="#top">Back to top</a>
+  </div>
+  <div class="section-body">
+    <div class="p-6 md:p-10 bg-[#f8f8f6]">
+      <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
+        <div class="md:col-span-1 bg-white border border-[#e6e3db] rounded-xl p-5">
+          <h3 class="text-xl font-bold mb-3">Amai Account</h3>
+          <input id="amai-fullname" class="w-full h-10 rounded-lg border border-[#e6e3db] mb-2 px-3" placeholder="Full name" />
+          <input id="amai-email" class="w-full h-10 rounded-lg border border-[#e6e3db] mb-2 px-3" placeholder="Email" type="email" />
+          <input id="amai-password" class="w-full h-10 rounded-lg border border-[#e6e3db] mb-3 px-3" placeholder="Password" type="password" />
+          <div class="flex gap-2">
+            <button id="amai-register" class="flex-1 h-10 bg-[#221d10] text-white rounded-lg text-sm font-bold">Register</button>
+            <button id="amai-login" class="flex-1 h-10 bg-primary text-[#181611] rounded-lg text-sm font-bold">Login</button>
+          </div>
+          <p id="amai-status" class="text-xs text-[#897f61] mt-3">Use your API server at <code>localhost:4000</code>.</p>
+        </div>
+        <div class="md:col-span-2 bg-white border border-[#e6e3db] rounded-xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xl font-bold">Live Catalog</h3>
+            <select id="amai-category" class="h-10 rounded-lg border border-[#e6e3db] px-3 text-sm">
+              <option value="">All</option>
+              <option value="signature_bonbons">Signature Bonbons</option>
+              <option value="bars">Bars</option>
+              <option value="hampers">Hampers</option>
+            </select>
+          </div>
+          <div id="amai-products" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+          <div class="mt-5 border-t pt-4">
+            <h4 class="font-bold mb-2">Cart Summary</h4>
+            <div id="amai-cart" class="text-sm text-[#897f61]">Login to view your cart.</div>
+            <p class="mt-2 text-sm">Subtotal: <strong id="amai-subtotal">$0.00</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+<script>
+(() => {
+  const API_BASE = 'http://localhost:4000/api/v1';
+  let token = localStorage.getItem('amai_token') || '';
+  const q = (selector) => document.querySelector(selector);
+
+  const status = q('#amai-status');
+  const products = q('#amai-products');
+  const cart = q('#amai-cart');
+  const subtotal = q('#amai-subtotal');
+
+  async function call(path, options = {}) {
+    const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const response = await fetch(API_BASE + path, { ...options, headers });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.message || 'Request failed');
+    return data;
+  }
+
+  function setStatus(message, bad = false) {
+    if (!status) return;
+    status.textContent = message;
+    status.style.color = bad ? '#9b3a3a' : '#897f61';
+  }
+
+  async function loadProducts() {
+    const category = q('#amai-category')?.value || '';
+
+    try {
+      const result = await call(`/products${category ? `?category=${encodeURIComponent(category)}` : ''}`);
+      const list = result.data || [];
+      products.innerHTML = list.map((item) => `
+        <article class="border border-[#e6e3db] rounded-lg p-3">
+          <p class="text-xs uppercase text-[#897f61]">${item.category}</p>
+          <h5 class="font-bold">${item.name}</h5>
+          <p class="text-xs text-[#897f61] line-clamp-2">${item.description || ''}</p>
+          <div class="flex items-center justify-between mt-2">
+            <span class="font-bold">$${(item.price_cents / 100).toFixed(2)}</span>
+            <button data-id="${item.id}" class="amai-add h-8 px-3 rounded bg-primary text-xs font-bold">Add</button>
+          </div>
+        </article>
+      `).join('') || '<p class="text-sm text-[#897f61]">No products found.</p>';
+
+      document.querySelectorAll('.amai-add').forEach((button) => {
+        button.addEventListener('click', () => addToCart(Number(button.dataset.id)));
+      });
+    } catch (error) {
+      products.innerHTML = `<p class="text-sm text-[#9b3a3a]">${error.message}</p>`;
+    }
+  }
+
+  async function addToCart(productId) {
+    if (!token) {
+      setStatus('Please login first.', true);
+      return;
+    }
+
+    try {
+      await call('/cart/items', {
+        method: 'POST',
+        body: JSON.stringify({ productId, quantity: 1 })
+      });
+      setStatus('Item added to cart.');
+      await loadCart();
+    } catch (error) {
+      setStatus(error.message, true);
+    }
+  }
+
+  async function loadCart() {
+    if (!token) return;
+
+    try {
+      const cartData = await call('/cart');
+      const items = cartData.items || [];
+      cart.innerHTML = items.map((item) => (
+        `<div class="flex justify-between"><span>${item.name} × ${item.quantity}</span><strong>$${(item.line_total_cents / 100).toFixed(2)}</strong></div>`
+      )).join('') || 'Cart is empty.';
+      subtotal.textContent = `$${cartData.subtotal || '0.00'}`;
+    } catch (error) {
+      setStatus(error.message, true);
+    }
+  }
+
+  q('#amai-register')?.addEventListener('click', async () => {
+    try {
+      const result = await call('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          fullName: q('#amai-fullname').value.trim(),
+          email: q('#amai-email').value.trim(),
+          password: q('#amai-password').value
+        })
+      });
+
+      token = result.token;
+      localStorage.setItem('amai_token', token);
+      setStatus('Registered and logged in.');
+      await loadCart();
+    } catch (error) {
+      setStatus(error.message, true);
+    }
+  });
+
+  q('#amai-login')?.addEventListener('click', async () => {
+    try {
+      const result = await call('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: q('#amai-email').value.trim(),
+          password: q('#amai-password').value
+        })
+      });
+
+      token = result.token;
+      localStorage.setItem('amai_token', token);
+      setStatus('Logged in successfully.');
+      await loadCart();
+    } catch (error) {
+      setStatus(error.message, true);
+    }
+  });
+
+  q('#amai-category')?.addEventListener('change', loadProducts);
+  loadProducts();
+  if (token) loadCart();
+})();
+</script>
 </body>
 </html>
