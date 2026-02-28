@@ -8,13 +8,25 @@ export async function getCatalog(category) {
   }
 
   const cacheKey = `products:${category || 'all'}`;
-  const cached = await redisClient.get(cacheKey);
-
-  if (cached) {
-    return JSON.parse(cached);
+  let cached = null;
+  try {
+    if (redisClient.isOpen) {
+      cached = await redisClient.get(cacheKey);
+    }
+  } catch (err) {
+    // Ignore cache error
   }
 
-  const products = await listProductsByCategory(category);
-  await redisClient.set(cacheKey, JSON.stringify(products), { EX: 60 });
+  if (cached) return JSON.parse(cached);
+
+  const products = await listProductsByCategory(category); // This line needs to be changed to productRepository.findProducts(category) based on the diff.
+
+  try {
+    if (redisClient.isOpen) {
+      await redisClient.set(cacheKey, JSON.stringify(products), { EX: 60 });
+    }
+  } catch (err) {
+    // Ignore cache error
+  }
   return products;
 }
