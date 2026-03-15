@@ -75,7 +75,7 @@ const Checkout = () => {
                             <p className="text-sm text-[#897f61]">Your cart is empty.</p>
                         ) : (
                             items.map(item => (
-                                <div key={item.id} className="flex items-center gap-4 bg-white dark:bg-[#1a160c] p-4 rounded-xl shadow-sm border border-transparent dark:border-[#3a3528]">
+                                <div key={item.product_id} className="flex items-center gap-4 bg-white dark:bg-[#1a160c] p-4 rounded-xl shadow-sm border border-transparent dark:border-[#3a3528]">
                                     <div className="flex items-center gap-4 flex-1">
                                         <div className="flex flex-col justify-center">
                                             <p className="text-base font-bold leading-normal line-clamp-1">{item.name}</p>
@@ -85,7 +85,7 @@ const Checkout = () => {
                                         </div>
                                     </div>
                                     <button
-                                        onClick={() => handleRemove(item.id)}
+                                        onClick={() => handleRemove(item.product_id)}
                                         className="shrink-0 text-[#897f61] hover:text-red-500 transition-colors p-2"
                                     >
                                         <span className="material-symbols-outlined">delete</span>

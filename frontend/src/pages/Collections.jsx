@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../services/api';
 
 const Collections = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const categoryQuery = searchParams.get('category') || '';
+
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchProducts = async () => {
+            setLoading(true);
             try {
-                const data = await getProducts();
+                const data = await getProducts(categoryQuery);
                 setProducts(data);
             } catch (err) {
                 setError(err.message || 'Failed to fetch products');
@@ -19,7 +24,15 @@ const Collections = () => {
             }
         };
         fetchProducts();
-    }, []);
+    }, [categoryQuery]);
+
+    const setCategory = (category) => {
+        if (category) {
+            setSearchParams({ category });
+        } else {
+            setSearchParams({});
+        }
+    };
 
     return (
         <div className="flex-grow flex flex-col items-center w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-12">
@@ -34,7 +47,7 @@ const Collections = () => {
                         </p>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-zen-brown dark:text-gray-400">
-                        <span>Home</span>
+                        <Link to="/" className="hover:text-primary transition-colors">Home</Link>
                         <span className="material-symbols-outlined text-[16px]">chevron_right</span>
                         <span className="text-zen-black dark:text-white font-medium">Shop</span>
                     </div>
@@ -46,13 +59,32 @@ const Collections = () => {
                 <div className="flex flex-wrap items-center gap-3 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
                     <span className="text-sm font-bold text-zen-black dark:text-white mr-2">Filter by:</span>
 
-                    <button className="group flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-zen-black text-white px-5 transition-all shadow-sm">
+                    <button
+                        onClick={() => setCategory('')}
+                        className={`group flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 transition-all shadow-sm ${!categoryQuery ? 'bg-zen-black text-white' : 'bg-zen-highlight dark:bg-zen-highlight-dark hover:bg-gray-200 dark:hover:bg-gray-700 text-zen-black dark:text-white'}`}
+                    >
                         <span className="text-sm font-medium">All Products</span>
                     </button>
 
-                    <button className="group flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-zen-highlight dark:bg-zen-highlight-dark hover:bg-gray-200 dark:hover:bg-gray-700 px-5 transition-all text-zen-black dark:text-white">
-                        <span className="text-sm font-medium">Matcha Series</span>
-                        <span className="material-symbols-outlined text-[18px]">expand_more</span>
+                    <button
+                        onClick={() => setCategory('signature_bonbons')}
+                        className={`group flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 transition-all shadow-sm ${categoryQuery === 'signature_bonbons' ? 'bg-zen-black text-white' : 'bg-zen-highlight dark:bg-zen-highlight-dark hover:bg-gray-200 dark:hover:bg-gray-700 text-zen-black dark:text-white'}`}
+                    >
+                        <span className="text-sm font-medium">Signature Bonbons</span>
+                    </button>
+
+                    <button
+                        onClick={() => setCategory('bars')}
+                        className={`group flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 transition-all shadow-sm ${categoryQuery === 'bars' ? 'bg-zen-black text-white' : 'bg-zen-highlight dark:bg-zen-highlight-dark hover:bg-gray-200 dark:hover:bg-gray-700 text-zen-black dark:text-white'}`}
+                    >
+                        <span className="text-sm font-medium">Bars</span>
+                    </button>
+
+                    <button
+                        onClick={() => setCategory('hampers')}
+                        className={`group flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 transition-all shadow-sm ${categoryQuery === 'hampers' ? 'bg-zen-black text-white' : 'bg-zen-highlight dark:bg-zen-highlight-dark hover:bg-gray-200 dark:hover:bg-gray-700 text-zen-black dark:text-white'}`}
+                    >
+                        <span className="text-sm font-medium">Hampers</span>
                     </button>
 
                     <div className="ml-auto hidden md:flex items-center gap-2">

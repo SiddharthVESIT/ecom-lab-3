@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser, registerUser } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const Auth = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -9,6 +9,7 @@ const Auth = () => {
     const [fullName, setFullName] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { loginUser, registerUser } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {

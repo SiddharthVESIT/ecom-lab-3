@@ -68,3 +68,29 @@ export const getOrders = async () => {
     const response = await api.get('/orders');
     return response.data.data || [];
 };
+// Admin API
+
+export const getAdminOrders = async () => {
+    const response = await api.get('/admin/orders');
+    return response.data.data;
+};
+
+export const getAdminOrderDetails = async (orderId) => {
+    const response = await api.get(`/admin/orders/${orderId}/details`);
+    return response.data.data;
+};
+
+export const updateOrderStatus = async (id, status) => {
+    const response = await api.put(`/admin/orders/${id}`, { status });
+    return response.data.data;
+};
+
+export const getAdminInventory = async () => {
+    const response = await api.get('/admin/inventory');
+    return response.data.data;
+};
+
+export const updateInventory = async (id, stock_count) => {
+    const response = await api.put(`/admin/inventory/${id}`, { stock_count });
+    return response.data.data;
+};

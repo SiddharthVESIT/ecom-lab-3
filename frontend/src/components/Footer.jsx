@@ -24,9 +24,9 @@ const Footer = () => {
                     <h4 className="text-zen-black dark:text-white font-bold mb-4">Shop</h4>
                     <ul className="flex flex-col gap-2 text-sm text-zen-brown dark:text-gray-400">
                         <li><Link to="/collections" className="hover:text-primary transition-colors">All Products</Link></li>
-                        <li><a href="#" className="hover:text-primary transition-colors">New Arrivals</a></li>
-                        <li><a href="#" className="hover:text-primary transition-colors">Best Sellers</a></li>
-                        <li><a href="#" className="hover:text-primary transition-colors">Gift Sets</a></li>
+                        <li><Link to="/collections?category=signature_bonbons" className="hover:text-primary transition-colors">Signature Bonbons</Link></li>
+                        <li><Link to="/collections?category=bars" className="hover:text-primary transition-colors">Bars</Link></li>
+                        <li><Link to="/collections?category=hampers" className="hover:text-primary transition-colors">Gift Sets</Link></li>
                     </ul>
                 </div>
 
@@ -34,9 +34,9 @@ const Footer = () => {
                     <h4 className="text-zen-black dark:text-white font-bold mb-4">About</h4>
                     <ul className="flex flex-col gap-2 text-sm text-zen-brown dark:text-gray-400">
                         <li><Link to="/about" className="hover:text-primary transition-colors">Our Story</Link></li>
-                        <li><a href="#" className="hover:text-primary transition-colors">Sustainability</a></li>
-                        <li><a href="#" className="hover:text-primary transition-colors">Careers</a></li>
-                        <li><a href="#" className="hover:text-primary transition-colors">Press</a></li>
+                        <li><Link to="/about" className="hover:text-primary transition-colors">Sustainability</Link></li>
+                        <li><Link to="/about" className="hover:text-primary transition-colors">Careers</Link></li>
+                        <li><Link to="/about" className="hover:text-primary transition-colors">Press</Link></li>
                     </ul>
                 </div>
 
@@ -59,8 +59,8 @@ const Footer = () => {
             <div className="max-w-[1440px] mx-auto mt-12 pt-8 border-t border-zen-highlight dark:border-zen-highlight-dark flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zen-brown dark:text-gray-500">
                 <p>© 2026 Zen Chocolate. Handcrafted in Kyoto. All rights reserved.</p>
                 <div className="flex gap-6">
-                    <a href="#" className="hover:text-zen-black dark:hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="#" className="hover:text-zen-black dark:hover:text-white transition-colors">Terms of Service</a>
+                    <Link to="/about" className="hover:text-zen-black dark:hover:text-white transition-colors">Privacy Policy</Link>
+                    <Link to="/about" className="hover:text-zen-black dark:hover:text-white transition-colors">Terms of Service</Link>
                 </div>
             </div>
         </footer>

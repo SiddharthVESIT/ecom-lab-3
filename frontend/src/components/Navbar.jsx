@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { user, logout } = useAuth() || {};
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        if (logout) logout();
+        navigate('/');
+    };
 
     return (
         <header className="sticky top-0 z-50 bg-white/95 dark:bg-zen-surface-dark/95 backdrop-blur-sm border-b border-zen-highlight dark:border-zen-highlight-dark transition-colors duration-300">
@@ -24,20 +32,39 @@ const Navbar = () => {
                     <Link to="/collections" className="text-zen-black dark:text-gray-200 hover:text-primary transition-colors text-sm font-medium">Shop</Link>
                     <Link to="/about" className="text-zen-black dark:text-gray-200 hover:text-primary transition-colors text-sm font-medium">About</Link>
                     <Link to="/orders" className="text-zen-black dark:text-gray-200 hover:text-primary transition-colors text-sm font-medium">Orders</Link>
+                    {user?.role === 'admin' && (
+                        <Link to="/admin" className="text-primary hover:text-yellow-600 transition-colors text-sm font-bold flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+                            Admin
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Action Buttons */}
                 <div className="flex items-center gap-3">
-                    <Link to="/auth" className="hidden sm:flex min-w-[84px] h-10 px-4 bg-primary hover:bg-yellow-500 text-zen-black text-sm font-bold items-center justify-center rounded-lg transition-colors">
-                        Sign In
-                    </Link>
+                    {!user ? (
+                        <>
+                            <Link to="/auth" className="hidden sm:flex min-w-[84px] h-10 px-4 bg-primary hover:bg-yellow-500 text-zen-black text-sm font-bold items-center justify-center rounded-lg transition-colors">
+                                Sign In
+                            </Link>
+                            <Link to="/auth" className="sm:hidden flex size-10 items-center justify-center rounded-lg bg-zen-highlight dark:bg-zen-highlight-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-zen-black dark:text-white">
+                                <span className="material-symbols-outlined text-[20px]">person</span>
+                            </Link>
+                        </>
+                    ) : (
+                        <div className="flex items-center gap-3">
+                            <span className="hidden sm:block text-sm font-medium text-zen-black dark:text-white mr-2">Hi, {user.fullName?.split(' ')[0]}</span>
+                            <button onClick={handleLogout} className="hidden sm:flex min-w-[84px] h-10 px-4 bg-transparent border border-zen-black dark:border-white hover:bg-zen-black hover:text-white dark:hover:bg-white dark:hover:text-black text-zen-black dark:text-white text-sm font-bold items-center justify-center rounded-lg transition-colors">
+                                Logout
+                            </button>
+                            <button onClick={handleLogout} className="sm:hidden flex size-10 items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors">
+                                <span className="material-symbols-outlined text-[20px]">logout</span>
+                            </button>
+                        </div>
+                    )}
                     <button className="hidden sm:flex size-10 items-center justify-center rounded-lg bg-zen-highlight dark:bg-zen-highlight-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-zen-black dark:text-white">
                         <span className="material-symbols-outlined text-[20px]">search</span>
                     </button>
-
-                    <Link to="/auth" className="sm:hidden flex size-10 items-center justify-center rounded-lg bg-zen-highlight dark:bg-zen-highlight-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-zen-black dark:text-white">
-                        <span className="material-symbols-outlined text-[20px]">person</span>
-                    </Link>
 
                     <Link to="/checkout" className="flex size-10 items-center justify-center rounded-lg bg-zen-highlight dark:bg-zen-highlight-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-zen-black dark:text-white relative">
                         <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
@@ -60,7 +87,16 @@ const Navbar = () => {
                     <Link to="/collections" className="px-6 py-4 border-b border-zen-highlight dark:border-zen-highlight-dark text-zen-black dark:text-white hover:text-primary dark:hover:text-primary" onClick={() => setMobileMenuOpen(false)}>Shop</Link>
                     <Link to="/about" className="px-6 py-4 border-b border-zen-highlight dark:border-zen-highlight-dark text-zen-black dark:text-white hover:text-primary dark:hover:text-primary" onClick={() => setMobileMenuOpen(false)}>About</Link>
                     <Link to="/orders" className="px-6 py-4 border-b border-zen-highlight dark:border-zen-highlight-dark text-zen-black dark:text-white hover:text-primary dark:hover:text-primary" onClick={() => setMobileMenuOpen(false)}>Orders</Link>
-                    <Link to="/auth" className="px-6 py-4 text-zen-black dark:text-white hover:text-primary dark:hover:text-primary" onClick={() => setMobileMenuOpen(false)}>Profile / Auth</Link>
+
+                    {user?.role === 'admin' && (
+                        <Link to="/admin" className="px-6 py-4 border-b border-zen-highlight dark:border-zen-highlight-dark text-primary font-bold" onClick={() => setMobileMenuOpen(false)}>Admin Dashboard</Link>
+                    )}
+
+                    {!user ? (
+                        <Link to="/auth" className="px-6 py-4 text-zen-black dark:text-white hover:text-primary dark:hover:text-primary" onClick={() => setMobileMenuOpen(false)}>Sign In / Register</Link>
+                    ) : (
+                        <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="px-6 py-4 text-left text-red-600 font-bold hover:text-red-800">Logout</button>
+                    )}
                 </div>
             )}
         </header>

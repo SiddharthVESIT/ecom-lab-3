@@ -1,4 +1,4 @@
-import { listProductsByCategory } from './product.repository.js';
+import { listProductsByCategory, findProductById } from './product.repository.js';
 import { redisClient } from '../../config/redis.js';
 import { PRODUCT_CATEGORIES } from '../../utils/constants.js';
 
@@ -29,4 +29,10 @@ export async function getCatalog(category) {
     // Ignore cache error
   }
   return products;
+}
+
+export async function getProductById(id) {
+  const product = await findProductById(id);
+  if (!product) throw new Error('Product not found');
+  return product;
 }

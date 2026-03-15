@@ -19,7 +19,7 @@ const ProductCard = ({ product }) => {
         : '$0.00';
 
     // Fallback image based on original design if none provided
-    const imgUrl = product.imageUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuDzHHhfmn6c1JAiE55YwrYMvYgDoD5uJXWgALrwfDrnAFNbxVf7tFBFIS7oZT-v21c7BEt0tB9AOiP2dNa0Zlr9SvC_8db5bnT5S6lPepaoI_etb4H49IlQUzzOUQs0Aznu_E7_kh19l4B7nS_I5IYGReY8crm5DzzkZeXU7ntuxBpSrKefBs8qPflIj-yOxP_A1XPEhVQ0eU7c5ZzJ8UYbfmHQVe_ElrcD9AwSMl12AY1GUDO334okWrhrnI-ZLe7u9BcJZpmeJWGx";
+    const imgUrl = product.image_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuDzHHhfmn6c1JAiE55YwrYMvYgDoD5uJXWgALrwfDrnAFNbxVf7tFBFIS7oZT-v21c7BEt0tB9AOiP2dNa0Zlr9SvC_8db5bnT5S6lPepaoI_etb4H49IlQUzzOUQs0Aznu_E7_kh19l4B7nS_I5IYGReY8crm5DzzkZeXU7ntuxBpSrKefBs8qPflIj-yOxP_A1XPEhVQ0eU7c5ZzJ8UYbfmHQVe_ElrcD9AwSMl12AY1GUDO334okWrhrnI-ZLe7u9BcJZpmeJWGx";
 
     return (
         <Link to={`/product/${product.id}`} className="group flex flex-col gap-4 cursor-pointer">

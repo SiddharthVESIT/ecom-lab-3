@@ -92,53 +92,59 @@ const Home = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Card 1 */}
                         <div className="group flex flex-col gap-4 bg-white dark:bg-background-dark p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
-                            <div className="w-full aspect-square overflow-hidden rounded-lg bg-[#f8f8f6] relative">
+                            <Link to="/product/1" className="w-full aspect-square overflow-hidden rounded-lg bg-[#f8f8f6] relative block">
                                 <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Assorted artisanal truffles in a box" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsOa3Omdx5NSo8h_qU-qSXMe3Fd134Mzw4CMk2gQprz8OMU_X5qy7CP_zL_aF8lX1d_hLwW-Zug3YOB4JcO8kuluuHdy6jJ8xsuXoWjQ4V9jD-NsFGLFFVifq7ehGMUCkiOKl-VzvFKFX7nfia5Bo2EjTcENn6gCnEz2O3sbKQ5znuwJz7bkOfqtt3SI42xo8bo88Q4gbAd3PiRf3oI3X6pJ7Me-kTlVu6Fk_gNj1E_i3zkZhmb91mishm-NfkyEeA0kJU7MfVZMjH" />
                                 <div className="absolute top-3 left-3 bg-white/90 dark:bg-black/80 px-3 py-1 text-xs font-bold tracking-wider uppercase rounded-sm backdrop-blur-sm">Best Seller</div>
-                            </div>
+                            </Link>
                             <div className="flex flex-col gap-1 px-2 pb-2">
-                                <h3 className="text-lg font-bold font-serif text-charcoal dark:text-off-white">The Signature Box</h3>
+                                <Link to="/product/1">
+                                    <h3 className="text-lg font-bold font-serif text-charcoal dark:text-off-white hover:text-primary transition-colors">The Signature Box</h3>
+                                </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">12pc Assortment of Matcha, Yuzu, and Sake.</p>
                                 <div className="flex items-center justify-between mt-4">
                                     <span className="text-base font-medium text-charcoal dark:text-off-white">$48.00</span>
-                                    <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
-                                        Add to Cart <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                                    </button>
+                                    <Link to="/product/1" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
+                                        View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
 
                         {/* Card 2 */}
                         <div className="group flex flex-col gap-4 bg-white dark:bg-background-dark p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
-                            <div className="w-full aspect-square overflow-hidden rounded-lg bg-[#f8f8f6] relative">
+                            <Link to="/product/2" className="w-full aspect-square overflow-hidden rounded-lg bg-[#f8f8f6] relative block">
                                 <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Matcha chocolate squares stacked elegantly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzHHhfmn6c1JAiE55YwrYMvYgDoD5uJXWgALrwfDrnAFNbxVf7tFBFIS7oZT-v21c7BEt0tB9AOiP2dNa0Zlr9SvC_8db5bnT5S6lPepaoI_etb4H49IlQUzzOUQs0Aznu_E7_kh19l4B7nS_I5IYGReY8crm5DzzkZeXU7ntuxBpSrKefBs8qPflIj-yOxP_A1XPEhVQ0eU7c5ZzJ8UYbfmHQVe_ElrcD9AwSMl12AY1GUDO334okWrhrnI-ZLe7u9BcJZpmeJWGx" />
-                            </div>
+                            </Link>
                             <div className="flex flex-col gap-1 px-2 pb-2">
-                                <h3 className="text-lg font-bold font-serif text-charcoal dark:text-off-white">Kyoto Matcha Nama</h3>
+                                <Link to="/product/2">
+                                    <h3 className="text-lg font-bold font-serif text-charcoal dark:text-off-white hover:text-primary transition-colors">Kyoto Matcha Nama</h3>
+                                </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">Silky ganache made with premium Uji matcha.</p>
                                 <div className="flex items-center justify-between mt-4">
                                     <span className="text-base font-medium text-charcoal dark:text-off-white">$32.00</span>
-                                    <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
-                                        Add to Cart <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                                    </button>
+                                    <Link to="/product/2" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
+                                        View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
 
                         {/* Card 3 */}
                         <div className="group flex flex-col gap-4 bg-white dark:bg-background-dark p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
-                            <div className="w-full aspect-square overflow-hidden rounded-lg bg-[#f8f8f6] relative">
+                            <Link to="/product/3" className="w-full aspect-square overflow-hidden rounded-lg bg-[#f8f8f6] relative block">
                                 <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Pink sakura chocolate bar with dried petals" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh3uTjQT4fMJzXLCntewWDHJXrzsNg9Wza85T4o5qmJ_LHVKtEbATGMFSPYOcM8-V68U-SnLCFO4FkgjQ7BplVbqhj1ftU10_H873vVuUm1SpbrSDUQ-MS7FUHhmDk5bFjETOyx_PeL6CHnfBdcRAVYzlvXNpHdO4iuLj7o7xWtA24ERZX0ciAP2NmbrBez6K9B8fNELWjJXC0sw_gmTKzabT2zL2K0bX949qKJCuR3DKO9WoV-zm-bIHcpMfX6if96ZpNmNWgFepg" />
                                 <div className="absolute top-3 left-3 bg-primary text-charcoal px-3 py-1 text-xs font-bold tracking-wider uppercase rounded-sm">Seasonal</div>
-                            </div>
+                            </Link>
                             <div className="flex flex-col gap-1 px-2 pb-2">
-                                <h3 className="text-lg font-bold font-serif text-charcoal dark:text-off-white">Sakura Blossom</h3>
+                                <Link to="/product/3">
+                                    <h3 className="text-lg font-bold font-serif text-charcoal dark:text-off-white hover:text-primary transition-colors">Sakura Blossom</h3>
+                                </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">White chocolate infused with salted cherry blossoms.</p>
                                 <div className="flex items-center justify-between mt-4">
                                     <span className="text-base font-medium text-charcoal dark:text-off-white">$24.00</span>
-                                    <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
-                                        Add to Cart <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                                    </button>
+                                    <Link to="/product/3" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
+                                        View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

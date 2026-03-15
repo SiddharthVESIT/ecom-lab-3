@@ -15,3 +15,12 @@ export function requireAuth(req, res, next) {
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
 }
+
+export function requireAdmin(req, res, next) {
+  requireAuth(req, res, () => {
+    if (req.user && req.user.role === 'admin') {
+      return next();
+    }
+    return res.status(403).json({ message: 'Forbidden: Admin access required' });
+  });
+}

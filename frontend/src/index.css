@@ -20,15 +20,16 @@
   --font-sans: 'Manrope', sans-serif;
 }
 
+/* Override dark mode variant to only apply when .dark class is used */
+@custom-variant dark (&:where(.dark, .dark *));
+
 body {
   font-family: var(--font-sans);
   background-color: var(--color-background-light);
   color: var(--color-text-main);
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: var(--color-background-dark);
-    color: var(--color-off-white);
-  }
+.dark body {
+  background-color: var(--color-background-dark);
+  color: var(--color-off-white);
 }
