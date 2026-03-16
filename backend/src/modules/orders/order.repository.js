@@ -28,3 +28,25 @@ export async function updateProductStock(productId, decrementBy) {
   const { rows } = await query(sql, [decrementBy, productId]);
   return rows.length > 0;
 }
+
+export async function updateOrderStatus(orderId, status) {
+  const sql = `
+    UPDATE orders 
+    SET status = $1 
+    WHERE id = $2
+    RETURNING *
+  `;
+  const { rows } = await query(sql, [status, orderId]);
+  return rows[0];
+}
+
+export async function getOrderItems(orderId) {
+  const sql = `
+    SELECT oi.*, p.name 
+    FROM order_items oi
+    JOIN products p ON p.id = oi.product_id
+    WHERE oi.order_id = $1
+  `;
+  const { rows } = await query(sql, [orderId]);
+  return rows;
+}

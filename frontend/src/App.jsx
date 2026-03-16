@@ -13,6 +13,7 @@ import Auth from './pages/Auth';
 import Orders from './pages/Orders';
 import About from './pages/About';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import PaymentSuccess from './pages/PaymentSuccess';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/about" element={<About />} />
               <Route path="/admin" element={<AdminDashboard />} />
             </Routes>

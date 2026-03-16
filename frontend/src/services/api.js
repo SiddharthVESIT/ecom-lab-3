@@ -64,6 +64,11 @@ export const createOrder = async (shippingDetails) => {
     return response.data;
 };
 
+export const downloadInvoice = async (orderId) => {
+    const response = await api.get(`/orders/${orderId}/invoice`, { responseType: 'blob' });
+    return response.data;
+};
+
 export const getOrders = async () => {
     const response = await api.get('/orders');
     return response.data.data || [];

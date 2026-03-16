@@ -8,6 +8,9 @@ const Checkout = () => {
     const [shipping, setShipping] = useState({
         firstName: '', lastName: '', address: '', country: 'United States', postalCode: '', email: ''
     });
+    const [payment, setPayment] = useState({
+        cardName: '', cardNumber: '', expiry: '', cvv: ''
+    });
     const [orderLoading, setOrderLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -41,12 +44,11 @@ const Checkout = () => {
 
         setOrderLoading(true);
         try {
-            await createOrder({
+            const res = await createOrder({
                 shippingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`,
                 billingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`
             });
-            alert('Order placed successfully!');
-            navigate('/orders');
+            navigate(`/payment-success?orderId=${res.data.id}`);
         } catch (err) {
             alert(err.response?.data?.message || err.message || 'Failed to place order');
         } finally {
@@ -177,6 +179,35 @@ const Checkout = () => {
                             </div>
                         </div>
 
+                        {/* Payment Information */}
+                        <div className="space-y-4">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                                <span className="material-symbols-outlined text-primary">credit_card</span>
+                                Payment Information
+                            </h3>
+                            <div className="p-4 bg-primary/10 rounded-xl mb-4 text-sm text-[#897f61] font-bold">
+                                ℹ️ This is a DEMO environment. No real cards will be charged.
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="col-span-2">
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#897f61] mb-2">Cardholder Name</label>
+                                    <input className="w-full h-12 rounded-lg bg-[#f8f8f6] dark:bg-[#2c2618] border-transparent focus:border-primary focus:bg-white dark:focus:bg-[#1a160c] focus:ring-0 transition-all text-sm px-4" type="text" required value={payment.cardName} onChange={e => setPayment({ ...payment, cardName: e.target.value })} />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#897f61] mb-2">Card Number</label>
+                                    <input className="w-full h-12 rounded-lg bg-[#f8f8f6] dark:bg-[#2c2618] border-transparent focus:border-primary focus:bg-white dark:focus:bg-[#1a160c] focus:ring-0 transition-all text-sm px-4" placeholder="0000 0000 0000 0000" type="text" maxLength="19" required value={payment.cardNumber} onChange={e => setPayment({ ...payment, cardNumber: e.target.value })} />
+                                </div>
+                                <div className="col-span-1">
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#897f61] mb-2">Expiry Date</label>
+                                    <input className="w-full h-12 rounded-lg bg-[#f8f8f6] dark:bg-[#2c2618] border-transparent focus:border-primary focus:bg-white dark:focus:bg-[#1a160c] focus:ring-0 transition-all text-sm px-4" placeholder="MM/YY" type="text" maxLength="5" required value={payment.expiry} onChange={e => setPayment({ ...payment, expiry: e.target.value })} />
+                                </div>
+                                <div className="col-span-1">
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#897f61] mb-2">CVV</label>
+                                    <input className="w-full h-12 rounded-lg bg-[#f8f8f6] dark:bg-[#2c2618] border-transparent focus:border-primary focus:bg-white dark:focus:bg-[#1a160c] focus:ring-0 transition-all text-sm px-4" placeholder="123" type="text" maxLength="4" required value={payment.cvv} onChange={e => setPayment({ ...payment, cvv: e.target.value })} />
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="flex items-center justify-between pt-6 border-t border-[#f4f3f0] dark:border-[#3a3528] mt-4">
                             <Link to="/collections" className="text-sm font-bold text-[#897f61] hover:text-[#181611] dark:hover:text-white transition-colors flex items-center gap-1">
                                 <span className="material-symbols-outlined text-sm">arrow_back</span>
@@ -187,8 +218,8 @@ const Checkout = () => {
                                 disabled={orderLoading || items.length === 0}
                                 className="h-12 px-8 bg-primary hover:bg-[#d9a60e] text-white font-bold rounded-lg transition-all shadow-md hover:shadow-lg flex items-center gap-2 disabled:opacity-50"
                             >
-                                {orderLoading ? 'Processing...' : 'Place Order'}
-                                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                                {orderLoading ? 'Processing Securely...' : 'Pay Now'}
+                                <span className="material-symbols-outlined text-sm">lock</span>
                             </button>
                         </div>
                     </form>
