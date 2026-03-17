@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
   full_name VARCHAR(120) NOT NULL,
   email VARCHAR(180) NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
+  role VARCHAR(50) NOT NULL DEFAULT 'customer',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -25,6 +26,7 @@ CREATE TABLE IF NOT EXISTS products (
   description TEXT NOT NULL,
   price_cents INTEGER NOT NULL CHECK (price_cents > 0),
   image_url TEXT,
+  stock_count INTEGER NOT NULL DEFAULT 100,
   is_active BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

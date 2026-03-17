@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getCart, createOrder, removeFromCart } from '../services/api';
+import { getCart, createOrder, removeFromCart, createPaymentOrder, verifyPayment } from '../services/api';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Checkout = () => {
@@ -44,14 +44,56 @@ const Checkout = () => {
 
         setOrderLoading(true);
         try {
-            const res = await createOrder({
-                shippingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`,
-                billingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`
-            });
-            navigate(`/payment-success?orderId=${res.data.id}`);
+            // 1. Create order on backend (amount in rupees, subtotal is string format)
+            const paymentOrder = await createPaymentOrder(parseFloat(cart.subtotal));
+
+            // 2. Open Razorpay Checktout
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_change_me", // We can use env, but if it fails we show alert
+                amount: paymentOrder.amount, // already in paise
+                currency: "INR",
+                name: "Zen Chocolatier",
+                description: "Order Payment",
+                order_id: paymentOrder.id,
+                handler: async function (response) {
+                    try {
+                        const verification = await verifyPayment({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                        });
+                        
+                        if (verification.verified) {
+                            // 3. Create actual DB order upon successful payment
+                            const res = await createOrder({
+                                shippingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`,
+                                billingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`
+                            });
+                            navigate(`/payment-success?orderId=${res.data.id}`);
+                        } else {
+                            alert("Payment verification failed. Please contact support.");
+                            setOrderLoading(false);
+                        }
+                    } catch (verifyError) {
+                        alert("Error verifying payment");
+                        setOrderLoading(false);
+                    }
+                },
+                prefill: {
+                    name: `${shipping.firstName} ${shipping.lastName}`,
+                    email: shipping.email,
+                },
+                theme: { color: "#3399cc" },
+                modal: {
+                    ondismiss: function() { setOrderLoading(false); }
+                }
+            };
+            
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
         } catch (err) {
-            alert(err.response?.data?.message || err.message || 'Failed to place order');
-        } finally {
+            alert(err.response?.data?.message || err.message || 'Failed to initialize payment');
             setOrderLoading(false);
         }
     };
@@ -179,34 +221,7 @@ const Checkout = () => {
                             </div>
                         </div>
 
-                        {/* Payment Information */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                <span className="material-symbols-outlined text-primary">credit_card</span>
-                                Payment Information
-                            </h3>
-                            <div className="p-4 bg-primary/10 rounded-xl mb-4 text-sm text-[#897f61] font-bold">
-                                ℹ️ This is a DEMO environment. No real cards will be charged.
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="col-span-2">
-                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#897f61] mb-2">Cardholder Name</label>
-                                    <input className="w-full h-12 rounded-lg bg-[#f8f8f6] dark:bg-[#2c2618] border-transparent focus:border-primary focus:bg-white dark:focus:bg-[#1a160c] focus:ring-0 transition-all text-sm px-4" type="text" required value={payment.cardName} onChange={e => setPayment({ ...payment, cardName: e.target.value })} />
-                                </div>
-                                <div className="col-span-2">
-                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#897f61] mb-2">Card Number</label>
-                                    <input className="w-full h-12 rounded-lg bg-[#f8f8f6] dark:bg-[#2c2618] border-transparent focus:border-primary focus:bg-white dark:focus:bg-[#1a160c] focus:ring-0 transition-all text-sm px-4" placeholder="0000 0000 0000 0000" type="text" maxLength="19" required value={payment.cardNumber} onChange={e => setPayment({ ...payment, cardNumber: e.target.value })} />
-                                </div>
-                                <div className="col-span-1">
-                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#897f61] mb-2">Expiry Date</label>
-                                    <input className="w-full h-12 rounded-lg bg-[#f8f8f6] dark:bg-[#2c2618] border-transparent focus:border-primary focus:bg-white dark:focus:bg-[#1a160c] focus:ring-0 transition-all text-sm px-4" placeholder="MM/YY" type="text" maxLength="5" required value={payment.expiry} onChange={e => setPayment({ ...payment, expiry: e.target.value })} />
-                                </div>
-                                <div className="col-span-1">
-                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#897f61] mb-2">CVV</label>
-                                    <input className="w-full h-12 rounded-lg bg-[#f8f8f6] dark:bg-[#2c2618] border-transparent focus:border-primary focus:bg-white dark:focus:bg-[#1a160c] focus:ring-0 transition-all text-sm px-4" placeholder="123" type="text" maxLength="4" required value={payment.cvv} onChange={e => setPayment({ ...payment, cvv: e.target.value })} />
-                                </div>
-                            </div>
-                        </div>
+                        {/* Payment Information Removed - Handled by Razorpay */}
 
                         <div className="flex items-center justify-between pt-6 border-t border-[#f4f3f0] dark:border-[#3a3528] mt-4">
                             <Link to="/collections" className="text-sm font-bold text-[#897f61] hover:text-[#181611] dark:hover:text-white transition-colors flex items-center gap-1">

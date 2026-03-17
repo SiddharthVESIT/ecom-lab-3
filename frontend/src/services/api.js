@@ -99,3 +99,14 @@ export const updateInventory = async (id, stock_count) => {
     const response = await api.put(`/admin/inventory/${id}`, { stock_count });
     return response.data.data;
 };
+
+// Payment API
+export const createPaymentOrder = async (amount) => {
+    const response = await api.post('/payment/create-order', { amount });
+    return response.data;
+};
+
+export const verifyPayment = async (verificationData) => {
+    const response = await api.post('/payment/verify', verificationData);
+    return response.data;
+};
