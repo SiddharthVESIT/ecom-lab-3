@@ -1,4 +1,4 @@
-import { addCartItem, changeCartItemQuantity, getCartTotals } from './cart.service.js';
+import { addCartItem, changeCartItemQuantity, getCartTotals, removeCartItem } from './cart.service.js';
 
 export async function getMyCart(req, res) {
   try {
@@ -25,6 +25,16 @@ export async function updateItem(req, res) {
     const productId = Number(req.params.productId);
     const quantity = Number(req.body.quantity);
     const data = await changeCartItemQuantity(req.user.sub, productId, quantity);
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+}
+
+export async function removeItem(req, res) {
+  try {
+    const productId = Number(req.params.productId);
+    const data = await removeCartItem(req.user.sub, productId);
     return res.status(200).json(data);
   } catch (error) {
     return res.status(400).json({ message: error.message });

@@ -100,6 +100,21 @@ export const updateInventory = async (id, stock_count) => {
     return response.data.data;
 };
 
+export const getAdminCustomers = async () => {
+    const response = await api.get('/admin/customers');
+    return response.data.data;
+};
+
+export const getAdminStats = async () => {
+    const response = await api.get('/admin/stats');
+    return response.data.data;
+};
+
+export const getAdminSales = async () => {
+    const response = await api.get('/admin/sales-analytics');
+    return response.data.data;
+};
+
 // Payment API
 export const createPaymentOrder = async (amount) => {
     const response = await api.post('/payment/create-order', { amount });
