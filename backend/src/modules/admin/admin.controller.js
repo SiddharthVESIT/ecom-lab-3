@@ -48,3 +48,30 @@ export async function updateInventory(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+
+export async function getCustomers(req, res) {
+    try {
+        const customers = await adminService.getCustomers();
+        return res.status(200).json({ data: customers });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getStats(req, res) {
+    try {
+        const stats = await adminService.getDashboardStats();
+        return res.status(200).json({ data: stats });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getSalesAnalytics(req, res) {
+    try {
+        const sales = await adminService.getSalesAnalytics();
+        return res.status(200).json({ data: sales });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}

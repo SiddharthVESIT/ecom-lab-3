@@ -50,3 +50,28 @@ export async function getOrderItems(orderId) {
   const { rows } = await query(sql, [orderId]);
   return rows;
 }
+
+export async function getUserOrders(userId) {
+  const sql = `
+    SELECT 
+      o.*,
+      COALESCE(
+        json_agg(
+          json_build_object(
+            'id', oi.id,
+            'quantity', oi.quantity,
+            'price_cents', oi.price_at_purchase_cents,
+            'product', json_build_object('name', p.name)
+          )
+        ) FILTER (WHERE oi.id IS NOT NULL), '[]'
+      ) as items
+    FROM orders o
+    LEFT JOIN order_items oi ON oi.order_id = o.id
+    LEFT JOIN products p ON p.id = oi.product_id
+    WHERE o.user_id = $1
+    GROUP BY o.id
+    ORDER BY o.created_at DESC
+  `;
+  const { rows } = await query(sql, [userId]);
+  return rows;
+}

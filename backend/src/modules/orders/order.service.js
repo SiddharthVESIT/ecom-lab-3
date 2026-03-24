@@ -47,3 +47,7 @@ export async function processCheckout(userId, shippingAddress, billingAddress) {
 
     return order;
 }
+
+export async function getUserOrders(userId) {
+    return orderRepo.getUserOrders(userId);
+}

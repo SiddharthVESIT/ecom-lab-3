@@ -37,3 +37,15 @@ export async function updateInventory(id, stockCount) {
 
     return product;
 }
+
+export async function getCustomers() {
+    return await adminRepo.getCustomersAnalytics();
+}
+
+export async function getDashboardStats() {
+    return await adminRepo.getDashboardStats();
+}
+
+export async function getSalesAnalytics() {
+    return await adminRepo.getProductSalesAnalytics();
+}

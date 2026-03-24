@@ -8,6 +8,16 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+export async function getMyOrders(req, res) {
+    try {
+        const userId = req.user.sub || req.user.id;
+        const orders = await orderService.getUserOrders(userId);
+        return res.status(200).json({ data: orders });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 export async function createOrder(req, res) {
     try {
         const { shippingAddress, billingAddress } = req.body;

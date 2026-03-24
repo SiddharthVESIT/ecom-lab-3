@@ -41,6 +41,13 @@ export async function changeCartItemQuantity(userId, productId, quantity) {
   return getCartTotals(userId);
 }
 
+export async function removeCartItem(userId, productId) {
+  assertPositiveInteger(productId, 'productId');
+  const cart = await ensureCart(userId);
+  await deleteCartItem(cart.id, productId);
+  return getCartTotals(userId);
+}
+
 export async function getCartTotals(userId) {
   const cart = await ensureCart(userId);
   const items = await getCartSummary(cart.id);

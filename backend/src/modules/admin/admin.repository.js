@@ -40,3 +40,67 @@ export async function updateProductStock(productId, stockCount) {
     );
     return rows[0];
 }
+
+export async function getCustomersAnalytics() {
+    const { rows } = await query(`
+        SELECT 
+            u.id, 
+            u.full_name, 
+            u.email, 
+            u.created_at as joined_date,
+            COUNT(o.id) as total_orders,
+            COALESCE(SUM(o.total_cents), 0) as lifetime_value_cents
+        FROM users u
+        LEFT JOIN orders o ON u.id = o.user_id AND o.status != 'cancelled'
+        WHERE u.role = 'customer'
+        GROUP BY u.id
+        ORDER BY lifetime_value_cents DESC
+    `);
+    return rows;
+}
+
+export async function getDashboardStats() {
+    // Total Revenue (completed/shipped/paid)
+    const revenueQuery = await query(`
+        SELECT COALESCE(SUM(total_cents), 0) as total_revenue_cents 
+        FROM orders 
+        WHERE status IN ('paid', 'shipped', 'completed')
+    `);
+    
+    // Total Orders
+    const ordersQuery = await query(`
+        SELECT COUNT(id) as total_orders 
+        FROM orders
+    `);
+    
+    // Low stock items (< 20)
+    const stockQuery = await query(`
+        SELECT COUNT(id) as low_stock_count 
+        FROM products 
+        WHERE stock_count < 20 AND is_active = true
+    `);
+    
+    return {
+        revenue_cents: revenueQuery.rows[0].total_revenue_cents,
+        total_orders: ordersQuery.rows[0].total_orders,
+        low_stock_count: stockQuery.rows[0].low_stock_count
+    };
+}
+
+export async function getProductSalesAnalytics() {
+    const { rows } = await query(`
+        SELECT 
+            p.id,
+            p.name as product_name,
+            p.category,
+            COALESCE(SUM(oi.quantity), 0) as total_units_sold,
+            COALESCE(SUM(oi.quantity * oi.price_at_purchase_cents), 0) as total_revenue_cents
+        FROM products p
+        LEFT JOIN order_items oi ON p.id = oi.product_id
+        LEFT JOIN orders o ON oi.order_id = o.id AND o.status IN ('paid', 'shipped', 'completed')
+        GROUP BY p.id
+        HAVING COALESCE(SUM(oi.quantity), 0) > 0
+        ORDER BY total_revenue_cents DESC
+    `);
+    return rows;
+}
