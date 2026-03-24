@@ -17,8 +17,13 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-export const getProducts = async (category = '') => {
-    const url = category ? `/products?category=${encodeURIComponent(category)}` : '/products';
+export const getProducts = async (category = '', flavorProfile = '') => {
+    let url = '/products';
+    const params = new URLSearchParams();
+    if (category) params.append('category', category);
+    if (flavorProfile) params.append('flavor_profile', flavorProfile);
+    if (params.toString()) url += `?${params.toString()}`;
+    
     const response = await api.get(url);
     return response.data.data || [];
 };
@@ -41,6 +46,19 @@ export const registerUser = async (fullName, email, password) => {
     if (response.data.token) {
         localStorage.setItem('amai_token', response.data.token);
     }
+    return response.data;
+};
+
+export const loginWithGoogle = async (idToken) => {
+    const response = await api.post('/auth/google', { idToken });
+    if (response.data.token) {
+        localStorage.setItem('amai_token', response.data.token);
+    }
+    return response.data;
+};
+
+export const updateFlavorProfile = async (flavorProfile) => {
+    const response = await api.put('/users/profile/flavor', { flavorProfile });
     return response.data;
 };
 

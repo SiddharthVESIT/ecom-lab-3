@@ -3,7 +3,10 @@ import { Link, useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../services/api';
 
+import { useAuth } from '../context/AuthContext';
+
 const Collections = () => {
+    const { user } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
     const categoryQuery = searchParams.get('category') || '';
 
@@ -15,7 +18,7 @@ const Collections = () => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const data = await getProducts(categoryQuery);
+                const data = await getProducts(categoryQuery, user?.flavorProfile);
                 setProducts(data);
             } catch (err) {
                 setError(err.message || 'Failed to fetch products');

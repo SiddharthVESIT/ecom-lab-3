@@ -1,4 +1,4 @@
-import { loginUser, registerUser } from './auth.service.js';
+import { loginUser, registerUser, loginWithGoogleToken } from './auth.service.js';
 
 function isEmail(value) {
   return /\S+@\S+\.\S+/.test(value);
@@ -32,6 +32,20 @@ export async function login(req, res) {
     }
 
     const result = await loginUser({ email, password });
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(401).json({ message: error.message });
+  }
+}
+
+export async function googleLogin(req, res) {
+  try {
+    const { idToken } = req.body;
+    if (!idToken) {
+      return res.status(400).json({ message: 'idToken is required' });
+    }
+
+    const result = await loginWithGoogleToken(idToken);
     return res.status(200).json(result);
   } catch (error) {
     return res.status(401).json({ message: error.message });

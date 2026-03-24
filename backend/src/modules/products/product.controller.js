@@ -2,7 +2,7 @@ import { getCatalog, getProductById } from './product.service.js';
 
 export async function getProducts(req, res) {
   try {
-    const products = await getCatalog(req.query.category);
+    const products = await getCatalog(req.query.category, req.query.flavor_profile);
     return res.status(200).json({ data: products });
   } catch (error) {
     if (error.message === 'Invalid category filter') {

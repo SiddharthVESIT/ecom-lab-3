@@ -9,7 +9,7 @@ const Auth = () => {
     const [fullName, setFullName] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { loginUser, registerUser } = useAuth();
+    const { loginUser, registerUser, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -18,14 +18,36 @@ const Auth = () => {
         setLoading(true);
 
         try {
+            let userResponse;
             if (isLogin) {
-                await loginUser(email, password);
+                userResponse = await loginUser(email, password);
             } else {
-                await registerUser(fullName, email, password);
+                userResponse = await registerUser(fullName, email, password);
             }
-            navigate('/collections'); // Redirect dynamically
+            if (userResponse.user && !userResponse.user.flavorProfile) {
+                navigate('/flavor-quiz');
+            } else {
+                navigate('/collections');
+            }
         } catch (err) {
             setError(err.response?.data?.message || err.message || 'Authentication failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGoogleLogin = async () => {
+        setError('');
+        setLoading(true);
+        try {
+            const userResponse = await loginWithGoogle();
+            if (userResponse.user && !userResponse.user.flavorProfile) {
+                navigate('/flavor-quiz');
+            } else {
+                navigate('/collections');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || err.message || 'Google Authentication failed');
         } finally {
             setLoading(false);
         }
@@ -149,7 +171,7 @@ const Auth = () => {
                             <div className="flex-grow border-t border-[#e6e3db] dark:border-[#3a3528]"></div>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
-                            <button className="flex items-center justify-center gap-2 rounded-lg border border-[#e6e3db] dark:border-[#3a3528] bg-transparent h-10 hover:bg-[#f8f8f6] dark:hover:bg-[#2a2415] transition-colors transform duration-100" type="button">
+                            <button onClick={handleGoogleLogin} className="flex items-center justify-center gap-2 rounded-lg border border-[#e6e3db] dark:border-[#3a3528] bg-transparent h-10 hover:bg-[#f8f8f6] dark:hover:bg-[#2a2415] transition-colors transform duration-100" type="button">
                                 <span className="text-sm font-medium text-[#181611] dark:text-white">Google</span>
                             </button>
                             <button className="flex items-center justify-center gap-2 rounded-lg border border-[#e6e3db] dark:border-[#3a3528] bg-transparent h-10 hover:bg-[#f8f8f6] dark:hover:bg-[#2a2415] transition-colors transform duration-100" type="button">
