@@ -55,9 +55,15 @@ export const AuthProvider = ({ children }) => {
         return response;
     };
 
-    const logout = () => {
-        localStorage.removeItem('amai_token');
-        setUser(null);
+    const logout = async () => {
+        try {
+            await api.logoutUser();
+        } catch (error) {
+            console.error('Logout failed:', error);
+        } finally {
+            localStorage.removeItem('amai_token');
+            setUser(null);
+        }
     };
 
     return (

@@ -49,6 +49,12 @@ export const registerUser = async (fullName, email, password) => {
     return response.data;
 };
 
+export const logoutUser = async () => {
+    const response = await api.post('/auth/logout');
+    localStorage.removeItem('amai_token');
+    return response.data;
+};
+
 export const loginWithGoogle = async (idToken) => {
     const response = await api.post('/auth/google', { idToken });
     if (response.data.token) {

@@ -1,4 +1,5 @@
 import { loginUser, registerUser, loginWithGoogleToken } from './auth.service.js';
+import { redisClient } from '../../config/redis.js';
 
 function isEmail(value) {
   return /\S+@\S+\.\S+/.test(value);
@@ -57,4 +58,18 @@ export function session(req, res) {
     message: 'Session active',
     user: req.user
   });
+}
+
+export async function logout(req, res) {
+  try {
+    const token = req.token;
+    if (token && redisClient.isOpen) {
+      // Decode slightly to get exp, or just blacklist for 24 hours (86400s) locally
+      await redisClient.set(`bl_${token}`, 'revoked', { EX: 86400 });
+    }
+    return res.status(200).json({ message: 'Successfully logged out' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    return res.status(500).json({ message: 'An error occurred during logout' });
+  }
 }
