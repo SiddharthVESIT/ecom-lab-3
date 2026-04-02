@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import apiRouter from './routes/index.js';
 
 const app = express();
+app.set('trust proxy', 1); // Trust the connection behind Render's load balancer
 
 // 1. Security Headers
 app.use(helmet());
