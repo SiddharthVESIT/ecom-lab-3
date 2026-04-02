@@ -8,6 +8,7 @@ services:
   - type: redis
     name: amai-redis
     plan: free # Render offers a free tier for Redis
+    ipAllowList: [] # Requires explicitly defining who can access it externally (empty = only internal render services)
 
   - type: web
     name: amai-backend
