@@ -30,7 +30,7 @@ BEGIN
   -- Get some product IDs
   SELECT id INTO p1_id FROM products WHERE sku = 'SB-MATCHA-001';
   SELECT id INTO p2_id FROM products WHERE sku = 'BR-DARKSEA-001';
-  SELECT id INTO p3_id FROM products WHERE sku = 'HM-KYOTO-001';
+  SELECT id INTO p3_id FROM products WHERE sku = 'HM-AMAI-001';
 
   -- Alice's Cart & Order 1 (Completed)
   INSERT INTO carts (user_id, status) VALUES (alice_id, 'completed') RETURNING id INTO alice_cart;

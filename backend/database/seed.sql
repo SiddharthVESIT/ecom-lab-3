@@ -1,4 +1,4 @@
--- Seed data for Zen Chocolatier products
+-- Seed data for Amai products
 
 INSERT INTO products (sku, name, category, description, price_cents, image_url, is_active)
 VALUES
@@ -49,7 +49,7 @@ VALUES
    1250, 'https://images.unsplash.com/photo-1623660053975-cf75a8be0908?w=600', TRUE),
 
   -- Hampers
-  ('HM-KYOTO-001', 'Kyoto Connoisseur Collection', 'hampers',
+  ('HM-AMAI-001', 'Amai Connoisseur Collection', 'hampers',
    'A curated selection of 12 signature bonbons, 2 artisan bars, and a tin of ceremonial matcha — all nestled in a handcrafted paulownia wood box.',
    8500, 'https://images.unsplash.com/photo-1549488344-cbb6c34cf08b?w=600', TRUE),
 
@@ -62,7 +62,7 @@ VALUES
    4500, 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=600', TRUE),
 
   ('HM-IMPERIAL-004', 'Imperial Gift Hamper', 'hampers',
-   'The ultimate Zen Chocolatier experience: 24 bonbons, 4 bars, matcha set, and a hand-signed certificate of authenticity. Presented in a lacquered box.',
+   'The ultimate Amai experience: 24 bonbons, 4 bars, matcha set, and a hand-signed certificate of authenticity. Presented in a lacquered box.',
    15000, 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600', TRUE)
 
 ON CONFLICT (sku) DO NOTHING;
