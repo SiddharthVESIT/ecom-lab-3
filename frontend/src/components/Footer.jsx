@@ -13,7 +13,7 @@ const Footer = () => {
                                 <path clipRule="evenodd" d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z" fill="currentColor" fillRule="evenodd"></path>
                             </svg>
                         </div>
-                        <span className="font-bold text-lg tracking-tight uppercase">Zen Chocolate</span>
+                        <span className="font-bold text-lg tracking-tight uppercase">Amai</span>
                     </div>
                     <p className="text-zen-brown dark:text-gray-400 text-sm leading-relaxed">
                         Artistry in every bite. Experience the finest Japanese chocolates delivered to your door.
@@ -57,7 +57,7 @@ const Footer = () => {
             </div>
 
             <div className="max-w-[1440px] mx-auto mt-12 pt-8 border-t border-zen-highlight dark:border-zen-highlight-dark flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zen-brown dark:text-gray-500">
-                <p>© 2026 Zen Chocolate. Handcrafted in Kyoto. All rights reserved.</p>
+                <p>© 2026 Amai. All rights reserved.</p>
                 <div className="flex gap-6">
                     <Link to="/about" className="hover:text-zen-black dark:hover:text-white transition-colors">Privacy Policy</Link>
                     <Link to="/about" className="hover:text-zen-black dark:hover:text-white transition-colors">Terms of Service</Link>

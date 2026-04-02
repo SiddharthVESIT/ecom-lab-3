@@ -10,6 +10,19 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
+let app;
+let auth;
+let googleProvider;
+
+if (firebaseConfig.apiKey) {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  googleProvider = new GoogleAuthProvider();
+} else {
+  console.warn("Firebase API key missing. Firebase Auth will be disabled and login with Google will not work.");
+  // Export dummy objects so the app doesn't crash on import
+  auth = null;
+  googleProvider = null;
+}
+
+export { auth, googleProvider };

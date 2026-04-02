@@ -48,6 +48,11 @@ export const AuthProvider = ({ children }) => {
     };
 
     const loginWithGoogle = async () => {
+        if (!auth || !googleProvider) {
+            console.error("Firebase Auth is not initialized. Check your API keys.");
+            alert("Google Login is currently disabled due to missing configuration.");
+            return null;
+        }
         const result = await signInWithPopup(auth, googleProvider);
         const idToken = await result.user.getIdToken();
         const response = await api.loginWithGoogle(idToken);

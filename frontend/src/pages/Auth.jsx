@@ -67,7 +67,7 @@ const Auth = () => {
                 {/* Header Section */}
                 <div className="pt-10 pb-4 px-8 text-center">
                     <h1 className="text-[#181611] dark:text-white tracking-tight text-[28px] font-bold leading-tight mb-2">
-                        {isLogin ? 'Welcome Back' : 'Join Zen Chocolatier'}
+                        {isLogin ? 'Welcome Back' : 'Join Amai'}
                     </h1>
                     <p className="text-[#897f61] dark:text-[#ada692] text-sm">Experience the art of Japanese chocolate crafting.</p>
                 </div>

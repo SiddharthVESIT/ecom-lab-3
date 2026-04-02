@@ -6,7 +6,7 @@ const About = () => {
             <h1 className="text-4xl font-bold mb-6 text-zen-black dark:text-white">Visit Us</h1>
 
             <p className="mb-4 text-zen-brown dark:text-gray-300">
-                Experience ZEN CHOCOLATIER in person.
+                Experience AMAI in person.
             </p>
 
             <div className="bg-[#f8f8f6] dark:bg-zen-highlight-dark p-6 rounded-lg text-zen-black dark:text-white">

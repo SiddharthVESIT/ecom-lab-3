@@ -52,7 +52,7 @@ const Checkout = () => {
                 key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_change_me", // We can use env, but if it fails we show alert
                 amount: paymentOrder.amount, // already in paise
                 currency: "INR",
-                name: "Zen Chocolatier",
+                name: "Amai",
                 description: "Order Payment",
                 order_id: paymentOrder.id,
                 handler: async function (response) {

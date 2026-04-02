@@ -15,7 +15,7 @@ const Home = () => {
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
                     <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4 md:px-20 max-w-[1280px] mx-auto w-full">
-                        <span className="text-primary text-sm md:text-base font-bold tracking-[0.2em] uppercase mb-4 animate-fade-in">Handcrafted in Kyoto</span>
+                        <span className="text-primary text-sm md:text-base font-bold tracking-[0.2em] uppercase mb-4 animate-fade-in">Handcrafted by Amai</span>
                         <h1 className="text-white font-serif text-5xl md:text-7xl font-light leading-tight tracking-tight mb-6 max-w-4xl">
                             The Art of <br />Japanese Chocolate
                         </h1>
@@ -117,7 +117,7 @@ const Home = () => {
                             </Link>
                             <div className="flex flex-col gap-1 px-2 pb-2">
                                 <Link to="/product/2">
-                                    <h3 className="text-lg font-bold font-serif text-charcoal dark:text-off-white hover:text-primary transition-colors">Kyoto Matcha Nama</h3>
+                                    <h3 className="text-lg font-bold font-serif text-charcoal dark:text-off-white hover:text-primary transition-colors">Amai Matcha Nama</h3>
                                 </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">Silky ganache made with premium Uji matcha.</p>
                                 <div className="flex items-center justify-between mt-4">
