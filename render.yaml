@@ -1,0 +1,31 @@
+databases:
+  - name: amai-postgres
+    databaseName: amai
+    user: amaiuser
+    plan: free
+
+services:
+  - type: redis
+    name: amai-redis
+    plan: free # Render offers a free tier for Redis
+
+  - type: web
+    name: amai-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: amai-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: amai-redis
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000

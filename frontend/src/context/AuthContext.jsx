@@ -4,7 +4,7 @@ import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../lib/firebase';
 import * as api from '../services/api';
 
-const API_URL = 'http://localhost:4000/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
 
 const AuthContext = createContext();
 
