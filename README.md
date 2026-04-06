@@ -6,18 +6,31 @@
 ---
 
 ## 📖 Project Abstract
-The **AMAI E-Commerce Platform** is a full-stack, enterprise-grade web application engineered to deliver a premium shopping experience for artisan chocolates. Embracing a minimalist "Wabi-Sabi" design philosophy through its UI, the application contrasts its frontend simplicity with a highly robust and scalable backend infrastructure. It utilizes a Decoupled (Headless) Architecture, cleanly separating presentation modules from rigorous backend business logic, ensuring exceptional maintainability, high availability, and rapid performance.
+The **AMAI E-Commerce Platform** is a full-stack, enterprise-grade digital storefront engineered to deliver a premium shopping experience for artisan Japanese chocolates. Embracing a minimalist "Wabi-Sabi" design philosophy through its presentation, the application contrasts its frontend simplicity with a highly rigorous Backend Architecture. 
 
-From secure JWT/Firebase authentication down to asynchronous relational sorting through PostgreSQL, AMAI is built not just as a storefront, but as a complete system featuring CRM (Customer Relationship Management), Inventory Analytics, and Payment integrations.
+Built on the foundation of **Headless E-Commerce**, AMAI cleanly separates its React/Vite storefront from its heavy Node/PostgreSQL business logic. This decoupled design natively protects core inventory databases from heavy frontend promotional traffic while ensuring exceptional continuous availability.
+
+Going significantly beyond a basic shopping cart, the AMAI system is a unified ecosystem integrating **Enterprise Resource Planning (ERP)** for dynamic supply chain analytics and **Customer Relationship Management (CRM)** algorithms to automate user personalization and retention.
 
 ---
 
-## ✨ Core Features
-* **Authentication & Authorization:** Secure, dual-layered user authentication utilizing JSON Web Tokens (JWT) for stateless session handling, alongside native Firebase Google OAuth.
-* **Streamlined Cart & Checkout:** Real-time state management integrating Razorpay for mocked seamless end-to-end payment transactions and dynamic invoice generation (PDFKit).
-* **Enterprise Admin CRM:** Dedicated administrative portals capable of deep-diving into order fulfillment tracking, customer segmentation analytics, and holistic revenue metrics.
-* **Highly Optimized UI Flow:** Developed utilizing React 19 and Tailwind CSS, featuring rapid route-transitions via `react-router-dom` and meticulously curated earth-toned aesthetics.
-* **Digital Marketing Integration:** Architected to support direct promotional tie-ins, leveraging generated marketing assets, cohesive branding, and targeted digital campaign tracking.
+## ✨ Core E-Commerce Architectures
+
+### 1. Advanced CRM (Customer Relationship Management)
+Built around the 4 pillars of the customer lifecycle (Select, Acquire, Extend, Retain):
+* **Select (Targeting):** Users take a dynamic 'Flavor Profiling Quiz' upon entering the site. This identifies their precise palate while acting as an engaging lead magnet.
+* **Retain (Loyalty Economics):** For every ₹100 spent, the system securely grants 1 Loyalty Point natively tracked during checkout webhooks. Users manipulate these points for sliding-scale fiat discounts on future orders.
+* **Extend (Algorithmic Cross-Selling):** Utilizing the logged user `flavor_profile`, the React frontend algorithmically re-sorts catalog grids to prioritize matched products, subliminally driving higher conversion metrics.
+* **Acquire (Abandoned Cart Harvesting):** Background SQL analytics sweep for orphaned carts exceeding 24 hours, actively generating retargeting matrices for email campaigns.
+
+### 2. Predictive ERP (Logistics & Operations)
+* **30-Day Velocity Analytics:** Using complex SQL aggregation (`WITH sales_velocity`), the backend mathematically projects 'Estimated Days to Stockout' based on rolling trailing performance.
+* **Atomic Restock Triggers:** Managers possess one-click physical restock capabilities directly linked to the central SQL vault, allowing instant, gapless supply chain replenishment without overselling risks.
+* **Kanban Order Pipelines:** Visual workflow management tracking customer intent from 'Assembly' to final 'Dispatch'.
+
+### 3. Tier-1 User Experience (UX)
+* **Micro-physics & Skeletons:** Eschewing bulky JS libraries, the app utilizes `Framer Motion` for magnetic button interactions, grid skeleton loaders masking network latency, and glass-morphic toast notifications.
+* **Payment Security:** Full Sandbox Razorpay integration that abstracts sensitive credit card logic into encrypted webhooks, concluding in automated itemized invoice generation.
 
 ---
 
