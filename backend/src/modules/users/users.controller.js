@@ -1,16 +1,4 @@
-import pg from 'pg';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '../../../.env') });
-
-const { Pool } = pg;
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-});
+import { query } from '../../config/db.js';
 
 export async function updateFlavorProfile(req, res) {
   try {
@@ -21,7 +9,7 @@ export async function updateFlavorProfile(req, res) {
       return res.status(400).json({ message: 'flavorProfile is required' });
     }
 
-    const result = await pool.query(
+    const result = await query(
       'UPDATE users SET flavor_profile = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
       [flavorProfile, userId]
     );
