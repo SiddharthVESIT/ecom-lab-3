@@ -9,9 +9,16 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH 
+let serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH 
     ? path.resolve(process.cwd(), process.env.FIREBASE_SERVICE_ACCOUNT_PATH)
     : null;
+
+// Render specific fallback
+if (!serviceAccountPath || !fs.existsSync(serviceAccountPath)) {
+    if (fs.existsSync('/etc/secrets/firebase-service-account.json')) {
+        serviceAccountPath = '/etc/secrets/firebase-service-account.json';
+    }
+}
 
 if (serviceAccountPath && fs.existsSync(serviceAccountPath)) {
     try {

@@ -23,8 +23,12 @@ const Collections = () => {
             setLoading(true);
             try {
                 if (user) {
-                    const profileData = await getProfile();
-                    setUserFlavor(profileData.flavor_profile);
+                    try {
+                        const profileData = await getProfile();
+                        setUserFlavor(profileData.flavor_profile);
+                    } catch (profileErr) {
+                        console.warn("Could not fetch user profile flavor, proceeding without flavor sorting.", profileErr);
+                    }
                 }
                 const data = await getProducts(categoryQuery);
                 setProducts(data);
