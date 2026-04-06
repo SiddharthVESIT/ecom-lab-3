@@ -13,6 +13,8 @@ const Collections = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [sortOrder, setSortOrder] = useState('featured');
+    const [isSortOpen, setIsSortOpen] = useState(false);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -36,6 +38,12 @@ const Collections = () => {
             setSearchParams({});
         }
     };
+
+    const sortedProducts = [...products].sort((a, b) => {
+        if (sortOrder === 'price-low') return a.price_cents - b.price_cents;
+        if (sortOrder === 'price-high') return b.price_cents - a.price_cents;
+        return 0;
+    });
 
     return (
         <div className="flex-grow flex flex-col items-center w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-12">
@@ -90,11 +98,23 @@ const Collections = () => {
                         <span className="text-sm font-medium">Hampers</span>
                     </button>
 
-                    <div className="ml-auto hidden md:flex items-center gap-2">
+                    <div className="ml-auto hidden md:flex items-center gap-2 relative">
                         <span className="text-sm text-zen-brown dark:text-gray-400">Sort by:</span>
-                        <button className="flex items-center gap-1 text-sm font-bold text-zen-black dark:text-white">
-                            Featured <span className="material-symbols-outlined text-[18px]">expand_more</span>
+                        <button 
+                            onClick={() => setIsSortOpen(!isSortOpen)}
+                            className="flex items-center gap-1 text-sm font-bold text-zen-black dark:text-white"
+                        >
+                            {sortOrder === 'featured' ? 'Featured' : sortOrder === 'price-low' ? 'Price: Low to High' : 'Price: High to Low'} 
+                            <span className="material-symbols-outlined text-[18px]">expand_more</span>
                         </button>
+                        
+                        {isSortOpen && (
+                            <div className="absolute top-[100%] right-0 mt-2 w-48 bg-white dark:bg-[#1a160d] rounded-xl shadow-lg border border-[#e6e3db] dark:border-[#3a3528] py-2 z-50">
+                                <button onClick={() => { setSortOrder('featured'); setIsSortOpen(false); }} className={`w-full text-left px-5 py-2.5 text-sm transition-colors ${sortOrder === 'featured' ? 'bg-[#f4f3f0] dark:bg-[#2a2415] font-bold text-primary' : 'text-[#897f61] hover:bg-black/5 dark:hover:bg-white/5'}`}>Featured</button>
+                                <button onClick={() => { setSortOrder('price-low'); setIsSortOpen(false); }} className={`w-full text-left px-5 py-2.5 text-sm transition-colors ${sortOrder === 'price-low' ? 'bg-[#f4f3f0] dark:bg-[#2a2415] font-bold text-primary' : 'text-[#897f61] hover:bg-black/5 dark:hover:bg-white/5'}`}>Price: Low to High</button>
+                                <button onClick={() => { setSortOrder('price-high'); setIsSortOpen(false); }} className={`w-full text-left px-5 py-2.5 text-sm transition-colors ${sortOrder === 'price-high' ? 'bg-[#f4f3f0] dark:bg-[#2a2415] font-bold text-primary' : 'text-[#897f61] hover:bg-black/5 dark:hover:bg-white/5'}`}>Price: High to Low</button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -110,7 +130,7 @@ const Collections = () => {
                 </div>
             ) : (
                 <div className="w-full max-w-[1200px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-                    {products.map(product => (
+                    {sortedProducts.map(product => (
                         <ProductCard key={product.id} product={product} />
                     ))}
                     {/* Fallback if no products */}

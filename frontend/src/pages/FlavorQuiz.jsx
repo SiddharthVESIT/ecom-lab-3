@@ -35,8 +35,8 @@ const FlavorQuiz = () => {
         setSaving(true);
         try {
             await updateFlavorProfile(selectedId);
-            // Updating local context isn't strictly necessary if it re-fetches, but we can just redirect
-            navigate('/collections');
+            // Re-mount the application context directly so CRM applies globally
+            window.location.href = '/collections';
         } catch (error) {
             console.error('Failed to update flavor profile:', error);
             setSaving(false);

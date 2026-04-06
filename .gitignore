@@ -5,3 +5,15 @@ backend/.env
 backend/firebase-service-account.json
 ecomlab1
 ECOM Lab 2.pdf
+
+# Production setup scripts
+backend/update_prod.js
+
+# Frontend build output
+frontend/dist/
+frontend/build/
+
+# IDE and OS files
+.DS_Store
+.vscode/
+*.log

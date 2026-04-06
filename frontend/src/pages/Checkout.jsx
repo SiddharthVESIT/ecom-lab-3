@@ -6,7 +6,7 @@ const Checkout = () => {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
     const [shipping, setShipping] = useState({
-        firstName: '', lastName: '', address: '', country: 'United States', postalCode: '', email: ''
+        firstName: '', lastName: '', address: '', country: 'India', postalCode: '', email: ''
     });
     const [payment, setPayment] = useState({
         cardName: '', cardNumber: '', expiry: '', cvv: ''
@@ -49,7 +49,7 @@ const Checkout = () => {
 
             // 2. Open Razorpay Checktout
             const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_change_me", // We can use env, but if it fails we show alert
+                key: paymentOrder.key_id || import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_change_me", // Used synced key
                 amount: paymentOrder.amount, // already in paise
                 currency: "INR",
                 name: "Amai",
@@ -208,6 +208,7 @@ const Checkout = () => {
                                 <div className="col-span-2 md:col-span-1">
                                     <label className="block text-xs font-bold uppercase tracking-wider text-[#897f61] mb-2">Country</label>
                                     <select className="w-full h-12 rounded-lg bg-[#f8f8f6] dark:bg-[#2c2618] border-transparent focus:border-primary focus:bg-white dark:focus:bg-[#1a160c] focus:ring-0 transition-all text-sm px-4 text-[#181611] dark:text-[#f4f3f0]" value={shipping.country} onChange={e => setShipping({ ...shipping, country: e.target.value })}>
+                                        <option>India</option>
                                         <option>United States</option>
                                         <option>Japan</option>
                                         <option>Canada</option>
