@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../services/api';
 
@@ -66,8 +67,8 @@ const Collections = () => {
             </div>
 
             {/* Filters / Chips */}
-            <div className="w-full max-w-[1200px] mb-10 sticky top-[72px] z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur py-4 -mx-4 px-4 border-b border-transparent md:border-none">
-                <div className="flex flex-wrap items-center gap-3 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+            <div className="w-full max-w-[1200px] mb-10 sticky top-[72px] z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur py-4 -mx-4 px-4 border-b border-transparent md:border-none flex justify-between items-center">
+                <div className="flex items-center gap-3 overflow-x-auto pb-2 md:pb-0 scrollbar-hide max-w-[80%] md:max-w-none">
                     <span className="text-sm font-bold text-zen-black dark:text-white mr-2">Filter by:</span>
 
                     <button
@@ -98,24 +99,26 @@ const Collections = () => {
                         <span className="text-sm font-medium">Hampers</span>
                     </button>
 
-                    <div className="ml-auto hidden md:flex items-center gap-2 relative">
-                        <span className="text-sm text-zen-brown dark:text-gray-400">Sort by:</span>
-                        <button 
-                            onClick={() => setIsSortOpen(!isSortOpen)}
-                            className="flex items-center gap-1 text-sm font-bold text-zen-black dark:text-white"
-                        >
-                            {sortOrder === 'featured' ? 'Featured' : sortOrder === 'price-low' ? 'Price: Low to High' : 'Price: High to Low'} 
-                            <span className="material-symbols-outlined text-[18px]">expand_more</span>
-                        </button>
-                        
-                        {isSortOpen && (
-                            <div className="absolute top-[100%] right-0 mt-2 w-48 bg-white dark:bg-[#1a160d] rounded-xl shadow-lg border border-[#e6e3db] dark:border-[#3a3528] py-2 z-50">
-                                <button onClick={() => { setSortOrder('featured'); setIsSortOpen(false); }} className={`w-full text-left px-5 py-2.5 text-sm transition-colors ${sortOrder === 'featured' ? 'bg-[#f4f3f0] dark:bg-[#2a2415] font-bold text-primary' : 'text-[#897f61] hover:bg-black/5 dark:hover:bg-white/5'}`}>Featured</button>
-                                <button onClick={() => { setSortOrder('price-low'); setIsSortOpen(false); }} className={`w-full text-left px-5 py-2.5 text-sm transition-colors ${sortOrder === 'price-low' ? 'bg-[#f4f3f0] dark:bg-[#2a2415] font-bold text-primary' : 'text-[#897f61] hover:bg-black/5 dark:hover:bg-white/5'}`}>Price: Low to High</button>
-                                <button onClick={() => { setSortOrder('price-high'); setIsSortOpen(false); }} className={`w-full text-left px-5 py-2.5 text-sm transition-colors ${sortOrder === 'price-high' ? 'bg-[#f4f3f0] dark:bg-[#2a2415] font-bold text-primary' : 'text-[#897f61] hover:bg-black/5 dark:hover:bg-white/5'}`}>Price: High to Low</button>
-                            </div>
-                        )}
-                    </div>
+                </div>
+
+                {/* Sort moved OUTSIDE the overflow-x-auto container */}
+                <div className="hidden md:flex flex-col items-end relative ml-4">
+                    <button 
+                        onClick={() => setIsSortOpen(!isSortOpen)}
+                        className="flex items-center gap-1 text-sm font-bold text-zen-black dark:text-white pb-3 md:pb-0"
+                    >
+                        <span className="text-zen-brown dark:text-gray-400 font-normal mr-1">Sort by:</span>
+                        {sortOrder === 'featured' ? 'Featured' : sortOrder === 'price-low' ? 'Price: Low to High' : 'Price: High to Low'} 
+                        <span className="material-symbols-outlined text-[18px]">expand_more</span>
+                    </button>
+                    
+                    {isSortOpen && (
+                        <div className="absolute top-[100%] right-0 lg:mt-2 w-48 bg-white dark:bg-[#1a160d] rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_40px_-5px_rgba(0,0,0,0.5)] border border-[#e6e3db] dark:border-[#3a3528] py-2 z-[60] origin-top-right animate-fade-in">
+                            <button onClick={() => { setSortOrder('featured'); setIsSortOpen(false); }} className={`w-full text-left px-5 py-2.5 text-sm transition-colors ${sortOrder === 'featured' ? 'bg-[#f4f3f0] dark:bg-[#2a2415] font-bold text-primary' : 'text-[#897f61] hover:bg-black/5 dark:hover:bg-white/5'}`}>Featured</button>
+                            <button onClick={() => { setSortOrder('price-low'); setIsSortOpen(false); }} className={`w-full text-left px-5 py-2.5 text-sm transition-colors ${sortOrder === 'price-low' ? 'bg-[#f4f3f0] dark:bg-[#2a2415] font-bold text-primary' : 'text-[#897f61] hover:bg-black/5 dark:hover:bg-white/5'}`}>Price: Low to High</button>
+                            <button onClick={() => { setSortOrder('price-high'); setIsSortOpen(false); }} className={`w-full text-left px-5 py-2.5 text-sm transition-colors ${sortOrder === 'price-high' ? 'bg-[#f4f3f0] dark:bg-[#2a2415] font-bold text-primary' : 'text-[#897f61] hover:bg-black/5 dark:hover:bg-white/5'}`}>Price: High to Low</button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -129,9 +132,21 @@ const Collections = () => {
                     {error}
                 </div>
             ) : (
-                <div className="w-full max-w-[1200px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-                    {sortedProducts.map(product => (
-                        <ProductCard key={product.id} product={product} />
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full max-w-[1200px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10"
+                >
+                    {sortedProducts.map((product, index) => (
+                        <motion.div 
+                            key={product.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                        >
+                            <ProductCard product={product} />
+                        </motion.div>
                     ))}
                     {/* Fallback if no products */}
                     {products.length === 0 && (
@@ -139,7 +154,7 @@ const Collections = () => {
                             No products available at the moment.
                         </div>
                     )}
-                </div>
+                </motion.div>
             )}
 
             {/* Pagination */}
