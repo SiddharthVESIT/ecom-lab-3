@@ -1,4 +1,5 @@
 import { loginUser, registerUser, loginWithGoogleToken } from './auth.service.js';
+import { findUserById } from './auth.repository.js';
 import { redisClient } from '../../config/redis.js';
 
 function isEmail(value) {
@@ -53,11 +54,25 @@ export async function googleLogin(req, res) {
   }
 }
 
-export function session(req, res) {
-  return res.status(200).json({
-    message: 'Session active',
-    user: req.user
-  });
+export async function session(req, res) {
+  try {
+    const user = await findUserById(req.user.sub);
+    if (!user) {
+      return res.status(401).json({ message: 'Session invalid' });
+    }
+    return res.status(200).json({
+      message: 'Session active',
+      user: {
+        id: user.id,
+        fullName: user.full_name,
+        email: user.email,
+        role: user.role,
+        flavorProfile: user.flavor_profile
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
 export async function logout(req, res) {

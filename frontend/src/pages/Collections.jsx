@@ -22,15 +22,17 @@ const Collections = () => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
+                let currentFlavor = null;
                 if (user) {
                     try {
                         const profileData = await getProfile();
-                        setUserFlavor(profileData.flavor_profile);
+                        currentFlavor = profileData.flavor_profile;
+                        setUserFlavor(currentFlavor);
                     } catch (profileErr) {
                         console.warn("Could not fetch user profile flavor, proceeding without flavor sorting.", profileErr);
                     }
                 }
-                const data = await getProducts(categoryQuery);
+                const data = await getProducts(categoryQuery, currentFlavor);
                 setProducts(data);
             } catch (err) {
                 setError(err.message || 'Failed to fetch products');
@@ -53,12 +55,7 @@ const Collections = () => {
         if (sortOrder === 'price-low') return a.price_cents - b.price_cents;
         if (sortOrder === 'price-high') return b.price_cents - a.price_cents;
         
-        if (userFlavor) {
-             const aMatch = a.tags?.includes(userFlavor) ? 1 : 0;
-             const bMatch = b.tags?.includes(userFlavor) ? 1 : 0;
-             return bMatch - aMatch;
-        }
-
+        // Backend already handles flavor-based sorting when userFlavor is passed
         return 0;
     });
 
