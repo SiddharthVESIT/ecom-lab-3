@@ -132,7 +132,7 @@ const Home = () => {
                                 </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">12pc Assortment of Matcha, Yuzu, and Sake.</p>
                                 <div className="flex items-center justify-between mt-4">
-                                    <span className="text-base font-medium text-charcoal dark:text-off-white">$48.00</span>
+                                    <span className="text-base font-medium text-charcoal dark:text-off-white">₹48.00</span>
                                     <Link to="/product/1" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
                                         View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                                     </Link>
@@ -151,7 +151,7 @@ const Home = () => {
                                 </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">Silky ganache made with premium Uji matcha.</p>
                                 <div className="flex items-center justify-between mt-4">
-                                    <span className="text-base font-medium text-charcoal dark:text-off-white">$32.00</span>
+                                    <span className="text-base font-medium text-charcoal dark:text-off-white">₹32.00</span>
                                     <Link to="/product/2" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
                                         View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                                     </Link>
@@ -171,7 +171,7 @@ const Home = () => {
                                 </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">White chocolate infused with salted cherry blossoms.</p>
                                 <div className="flex items-center justify-between mt-4">
-                                    <span className="text-base font-medium text-charcoal dark:text-off-white">$24.00</span>
+                                    <span className="text-base font-medium text-charcoal dark:text-off-white">₹24.00</span>
                                     <Link to="/product/3" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
                                         View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                                     </Link>

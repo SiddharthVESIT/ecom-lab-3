@@ -10,6 +10,8 @@ const AdminDashboard = () => {
     const [products, setProducts] = useState([]);
     const [customers, setCustomers] = useState([]);
     const [sales, setSales] = useState([]);
+    const [procurement, setProcurement] = useState([]);
+    const [abandoned, setAbandoned] = useState([]);
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -44,6 +46,14 @@ const AdminDashboard = () => {
                 } else if (activeTab === 'sales') {
                     const data = await getAdminSales();
                     setSales(data);
+                } else if (activeTab === 'procurement') {
+                    const { getProcurement } = await import('../../services/api');
+                    const data = await getProcurement();
+                    setProcurement(data);
+                } else if (activeTab === 'acquisition') {
+                    const { getAbandonedCarts } = await import('../../services/api');
+                    const data = await getAbandonedCarts();
+                    setAbandoned(data);
                 }
             } catch (err) {
                 setError(err.message || 'Failed to generic data');
@@ -112,6 +122,20 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleRestock = async (productId) => {
+        try {
+            const { restockProduct } = await import('../../services/api');
+            await restockProduct(productId);
+            // Refresh procurement data
+            const { getProcurement } = await import('../../services/api');
+            const data = await getProcurement();
+            setProcurement(data);
+            alert('Restocked 100 units successfully!');
+        } catch(err) {
+            alert('Failed to restock');
+        }
+    };
+
     return (
         <div className="flex-grow w-full max-w-[1440px] mx-auto px-4 md:px-10 py-8">
             <h1 className="text-3xl font-black mb-8 text-zen-black dark:text-white">Admin Dashboard</h1>
@@ -142,6 +166,18 @@ const AdminDashboard = () => {
                 >
                     Sales Analytics
                 </button>
+                <button
+                    onClick={() => setActiveTab('procurement')}
+                    className={`font-bold pb-2 border-b-2 transition-colors ${activeTab === 'procurement' ? 'border-primary text-primary' : 'border-transparent text-zen-brown dark:text-gray-400 hover:text-zen-black dark:hover:text-white'}`}
+                >
+                    ERP Procurement
+                </button>
+                <button
+                    onClick={() => setActiveTab('acquisition')}
+                    className={`font-bold pb-2 border-b-2 transition-colors ${activeTab === 'acquisition' ? 'border-primary text-primary' : 'border-transparent text-zen-brown dark:text-gray-400 hover:text-zen-black dark:hover:text-white'}`}
+                >
+                    CRM Acquisition
+                </button>
             </div>
 
             {stats && (
@@ -149,7 +185,7 @@ const AdminDashboard = () => {
                     <div className="bg-white dark:bg-[#1a160d] p-6 rounded-xl border border-zen-highlight dark:border-zen-highlight-dark flex flex-col items-center justify-center">
                         <span className="text-4xl material-symbols-outlined text-primary mb-2">payments</span>
                         <p className="text-zen-brown dark:text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Total Revenue</p>
-                        <p className="text-3xl font-black text-zen-black dark:text-white">${(stats.revenue_cents / 100).toFixed(2)}</p>
+                        <p className="text-3xl font-black text-zen-black dark:text-white">₹{(stats.revenue_cents / 100).toFixed(2)}</p>
                     </div>
                     <div className="bg-white dark:bg-[#1a160d] p-6 rounded-xl border border-zen-highlight dark:border-zen-highlight-dark flex flex-col items-center justify-center">
                         <span className="text-4xl material-symbols-outlined text-blue-500 mb-2">shopping_bag</span>
@@ -189,7 +225,7 @@ const AdminDashboard = () => {
                                             <td className="px-6 py-4 font-mono text-xs">{product.id.substring(0, 8)}</td>
                                             <td className="px-6 py-4 font-bold">{product.name}</td>
                                             <td className="px-6 py-4 capitalize">{product.category.replace('_', ' ')}</td>
-                                            <td className="px-6 py-4">${(product.price_cents / 100).toFixed(2)}</td>
+                                            <td className="px-6 py-4">₹{(product.price_cents / 100).toFixed(2)}</td>
                                             <td className="px-6 py-4">
                                                 {editingProduct === product.id ? (
                                                     <input
@@ -251,7 +287,7 @@ const AdminDashboard = () => {
                                                     <div className="font-bold">{order.customer_name}</div>
                                                     <div className="text-xs opacity-70">{order.customer_email}</div>
                                                 </td>
-                                                <td className="px-6 py-4 font-medium">${(order.total_amount_cents / 100).toFixed(2)}</td>
+                                                <td className="px-6 py-4 font-medium">₹{(order.total_amount_cents / 100).toFixed(2)}</td>
                                                 <td className="px-6 py-4">
                                                     <span className={`inline-flex px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                                                         order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
@@ -297,7 +333,7 @@ const AdminDashboard = () => {
                                                                                     <span>Qty: {item.quantity}</span>
                                                                                 </div>
                                                                             </div>
-                                                                            <div className="font-medium">${(item.price_at_purchase_cents / 100).toFixed(2)}</div>
+                                                                            <div className="font-medium">₹{(item.price_at_purchase_cents / 100).toFixed(2)}</div>
                                                                         </div>
                                                                     ))}
                                                                 </div>
@@ -351,7 +387,7 @@ const AdminDashboard = () => {
                                             <td className="px-6 py-4">{new Date(customer.joined_date).toLocaleDateString()}</td>
                                             <td className="px-6 py-4 font-bold">{customer.total_orders}</td>
                                             <td className="px-6 py-4 text-right font-medium text-emerald-600 dark:text-emerald-400">
-                                                ${(customer.lifetime_value_cents / 100).toFixed(2)}
+                                                ₹{(customer.lifetime_value_cents / 100).toFixed(2)}
                                             </td>
                                         </tr>
                                     ))}
@@ -383,7 +419,7 @@ const AdminDashboard = () => {
                                             <td className="px-6 py-4 capitalize">{item.category.replace('_', ' ')}</td>
                                             <td className="px-6 py-4 text-center font-bold text-blue-600 dark:text-blue-400">{item.total_units_sold}</td>
                                             <td className="px-6 py-4 text-right font-medium text-emerald-600 dark:text-emerald-400">
-                                                ${(item.total_revenue_cents / 100).toFixed(2)}
+                                                ₹{(item.total_revenue_cents / 100).toFixed(2)}
                                             </td>
                                         </tr>
                                     ))}
@@ -391,6 +427,77 @@ const AdminDashboard = () => {
                                         <tr>
                                             <td colSpan="4" className="px-6 py-8 text-center text-zen-brown">No sales data found.</td>
                                         </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    {activeTab === 'procurement' && (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-sm text-zen-black dark:text-gray-200">
+                                <thead className="bg-[#f8f8f6] dark:bg-[#221d10] text-xs uppercase font-bold text-zen-brown dark:text-gray-400">
+                                    <tr>
+                                        <th className="px-6 py-4">Product</th>
+                                        <th className="px-6 py-4 text-center">Current Stock</th>
+                                        <th className="px-6 py-4 text-center">30-Day Velocity</th>
+                                        <th className="px-6 py-4 text-center">Est. Days Remaining</th>
+                                        <th className="px-6 py-4 text-right">Action (ERP)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {procurement.map((item) => (
+                                        <tr key={item.id} className="border-b border-zen-highlight dark:border-zen-highlight-dark hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4 font-bold">{item.name}</td>
+                                            <td className={`px-6 py-4 text-center font-bold ${item.stock_count < 20 ? 'text-red-500' : ''}`}>{item.stock_count}</td>
+                                            <td className="px-6 py-4 text-center text-blue-600 dark:text-blue-400">{item.past_30d_velocity} units/m</td>
+                                            <td className="px-6 py-4 text-center font-bold">
+                                                {item.estimated_days_remaining > 365 ? 'Stable' : `${item.estimated_days_remaining} Days`}
+                                                {item.estimated_days_remaining < 14 && <span className="ml-2 text-red-500 text-xs shadow-sm bg-red-100 dark:bg-red-900 px-1 rounded">RESTOCK</span>}
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <button onClick={() => handleRestock(item.id)} className="bg-primary text-white text-xs px-3 py-1.5 rounded uppercase font-bold hover:scale-105 transition-all">
+                                                    Order +100
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {procurement.length === 0 && (
+                                        <tr><td colSpan="5" className="px-6 py-8 text-center text-zen-brown">No products to procure.</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    {activeTab === 'acquisition' && (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-sm text-zen-black dark:text-gray-200">
+                                <thead className="bg-[#f8f8f6] dark:bg-[#221d10] text-xs uppercase font-bold text-zen-brown dark:text-gray-400">
+                                    <tr>
+                                        <th className="px-6 py-4">Cart ID</th>
+                                        <th className="px-6 py-4">Customer Name</th>
+                                        <th className="px-6 py-4">Email</th>
+                                        <th className="px-6 py-4">Abandoned Since</th>
+                                        <th className="px-6 py-4 text-right">Action (CRM)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {abandoned.map((cart) => (
+                                        <tr key={cart.cart_id} className="border-b border-zen-highlight dark:border-zen-highlight-dark hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4 font-mono text-xs">{cart.cart_id.substring(0,8)}</td>
+                                            <td className="px-6 py-4 font-bold">{cart.full_name}</td>
+                                            <td className="px-6 py-4 text-zen-brown">{cart.email}</td>
+                                            <td className="px-6 py-4 text-red-500">{new Date(cart.created_at).toLocaleString()}</td>
+                                            <td className="px-6 py-4 text-right">
+                                                <button className="border border-primary text-primary text-xs px-3 py-1.5 rounded uppercase font-bold hover:bg-primary hover:text-white transition-all">
+                                                    Email 10% Promo
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {abandoned.length === 0 && (
+                                        <tr><td colSpan="5" className="px-6 py-8 text-center text-zen-brown">No abandoned carts found!</td></tr>
                                     )}
                                 </tbody>
                             </table>

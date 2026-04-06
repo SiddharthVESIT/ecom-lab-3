@@ -1,4 +1,5 @@
 import * as adminRepo from './admin.repository.js';
+export * from './admin.repository.js';
 import { redisClient } from '../../config/redis.js';
 
 export async function getAdminOrders() {

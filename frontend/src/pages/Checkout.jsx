@@ -12,7 +12,22 @@ const Checkout = () => {
         cardName: '', cardNumber: '', expiry: '', cvv: ''
     });
     const [orderLoading, setOrderLoading] = useState(false);
+    const [loyaltyPoints, setLoyaltyPoints] = useState(0);
+    const [appliedPoints, setAppliedPoints] = useState(0);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const { getProfile } = await import('../services/api');
+                const profile = await getProfile();
+                if (profile && profile.loyalty_points) {
+                    setLoyaltyPoints(profile.loyalty_points);
+                }
+            } catch (err) {}
+        };
+        fetchUserProfile();
+    }, []);
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -44,8 +59,12 @@ const Checkout = () => {
 
         setOrderLoading(true);
         try {
+            // Apply maximum allowed discount locally for razorpay amount
+            const discountCents = Math.min(appliedPoints * 100, cart.subtotal * 100 || 0);
+            const finalAmount = parseFloat(cart.subtotal) - (discountCents / 100);
+
             // 1. Create order on backend (amount in rupees, subtotal is string format)
-            const paymentOrder = await createPaymentOrder(parseFloat(cart.subtotal));
+            const paymentOrder = await createPaymentOrder(Math.max(finalAmount, 0));
 
             // 2. Open Razorpay Checktout
             const options = {
@@ -67,7 +86,8 @@ const Checkout = () => {
                             // 3. Create actual DB order upon successful payment
                             const res = await createOrder({
                                 shippingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`,
-                                billingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`
+                                billingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`,
+                                appliedPoints: appliedPoints
                             });
                             navigate(`/payment-success?orderId=${res.data.id}`);
                         } else {
@@ -124,7 +144,7 @@ const Checkout = () => {
                                         <div className="flex flex-col justify-center">
                                             <p className="text-base font-bold leading-normal line-clamp-1">{item.name}</p>
                                             <p className="text-[#897f61] text-sm font-normal mt-1">
-                                                Qty: {item.quantity} | ${(item.line_total_cents / 100).toFixed(2)}
+                                                Qty: {item.quantity} | ₹{(item.line_total_cents / 100).toFixed(2)}
                                             </p>
                                         </div>
                                     </div>
@@ -140,17 +160,42 @@ const Checkout = () => {
                     </div>
 
                     <div className="mt-4 pt-6 border-t border-[#e6e4dd] dark:border-[#3a3528] space-y-3 text-sm">
+                        {loyaltyPoints > 0 && (
+                            <div className="bg-[#f8f8f6] dark:bg-[#2c2618] p-3 rounded-lg mb-2">
+                                <p className="text-xs font-bold text-zen-black dark:text-white mb-2 uppercase tracking-wider">Amai Loyalty</p>
+                                <div className="flex justify-between items-center text-[#897f61]">
+                                    <span>Available Points: {loyaltyPoints}</span>
+                                    <div className="flex gap-2 items-center">
+                                        <input 
+                                            type="number" 
+                                            min="0" 
+                                            max={loyaltyPoints} 
+                                            value={appliedPoints} 
+                                            onChange={e => setAppliedPoints(Math.min(parseInt(e.target.value) || 0, loyaltyPoints))}
+                                            className="w-16 h-8 text-center text-xs bg-white dark:bg-[#1a160c] border border-[#e6e4dd] dark:border-[#3a3528] rounded"
+                                        />
+                                        <span>pts</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         <div className="flex justify-between text-[#897f61]">
                             <span>Subtotal</span>
-                            <span>${subtotal}</span>
+                            <span>₹{subtotal}</span>
                         </div>
+                        {appliedPoints > 0 && (
+                            <div className="flex justify-between text-primary font-medium">
+                                <span>Loyalty Discount</span>
+                                <span>-₹{(appliedPoints * 1).toFixed(2)}</span>
+                            </div>
+                        )}
                         <div className="flex justify-between text-[#897f61]">
                             <span>Shipping (Standard)</span>
                             <span>Free</span>
                         </div>
                         <div className="flex justify-between text-lg font-bold pt-2 text-[#181611] dark:text-[#f4f3f0]">
                             <span>Total</span>
-                            <span>${subtotal}</span>
+                            <span>₹{Math.max(parseFloat(subtotal) - appliedPoints, 0).toFixed(2)}</span>
                         </div>
                     </div>
 

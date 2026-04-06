@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ProductCard from '../components/ProductCard';
-import { getProducts } from '../services/api';
+import { getProducts, getProfile } from '../services/api';
 
 import { useAuth } from '../context/AuthContext';
 
@@ -12,6 +12,7 @@ const Collections = () => {
     const categoryQuery = searchParams.get('category') || '';
 
     const [products, setProducts] = useState([]);
+    const [userFlavor, setUserFlavor] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [sortOrder, setSortOrder] = useState('featured');
@@ -21,7 +22,11 @@ const Collections = () => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const data = await getProducts(categoryQuery, user?.flavorProfile);
+                if (user) {
+                    const profileData = await getProfile();
+                    setUserFlavor(profileData.flavor_profile);
+                }
+                const data = await getProducts(categoryQuery);
                 setProducts(data);
             } catch (err) {
                 setError(err.message || 'Failed to fetch products');
@@ -30,7 +35,7 @@ const Collections = () => {
             }
         };
         fetchProducts();
-    }, [categoryQuery]);
+    }, [categoryQuery, user]);
 
     const setCategory = (category) => {
         if (category) {
@@ -43,6 +48,13 @@ const Collections = () => {
     const sortedProducts = [...products].sort((a, b) => {
         if (sortOrder === 'price-low') return a.price_cents - b.price_cents;
         if (sortOrder === 'price-high') return b.price_cents - a.price_cents;
+        
+        if (userFlavor) {
+             const aMatch = a.tags?.includes(userFlavor) ? 1 : 0;
+             const bMatch = b.tags?.includes(userFlavor) ? 1 : 0;
+             return bMatch - aMatch;
+        }
+
         return 0;
     });
 

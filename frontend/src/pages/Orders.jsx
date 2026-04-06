@@ -50,7 +50,7 @@ const Orders = () => {
                                         <span className="inline-block px-3 py-1 bg-primary/10 text-primary font-bold text-xs rounded-full uppercase tracking-wider mb-1">
                                             {order.status}
                                         </span>
-                                        <p className="font-bold text-[#181611] dark:text-white">${(order.total_cents / 100).toFixed(2)}</p>
+                                        <p className="font-bold text-[#181611] dark:text-white">₹{(order.total_cents / 100).toFixed(2)}</p>
                                     </div>
                                 </div>
 
@@ -60,7 +60,7 @@ const Orders = () => {
                                             <span className="text-[#181611] dark:text-white">
                                                 {item.quantity}x {item.product?.name || 'Artisan Chocolate'}
                                             </span>
-                                            <span className="text-[#897f61]">${(item.price_cents / 100).toFixed(2)}</span>
+                                            <span className="text-[#897f61]">₹{(item.price_cents / 100).toFixed(2)}</span>
                                         </div>
                                     ))}
                                 </div>

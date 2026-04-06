@@ -38,9 +38,9 @@ const ProductDetails = () => {
     if (loading) return <div className="py-20 text-center text-primary">Loading details...</div>;
     if (!product) return <div className="py-20 text-center">Product not found.</div>;
 
-    const priceFormatted = product.price_cents
-        ? `$${(product.price_cents / 100).toFixed(2)}`
-        : '$0.00';
+    const priceFormatted = product
+        ? `₹${(product.price_cents / 100).toFixed(2)}`
+        : '₹0.00';
 
     const imgUrl = product.image_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuAlFDsHr5u2h3uQg9HlSuXzg16R32UrhFlQW8h8B6wOW30MFW9XVCdWhWP8kG1yO6yH3Ap1dlU7Tjl8T88B-aCTc0N4zYdLheG4gGxfwT6kN3dP1sD_a_h_bbV8fsTCumUjgT8vkI9UWlYmxescMU224-J7P1GqsxpkePq0U0Iwl0BDUxx4SYV7P6cAy58aR4GMZDvDq_RK2GYQRsqqsWkJuf2bjyfeSThbAdZR2VizUQ4jrz-sW05Z_pnWSH8PymEaPAh1a_9LTUAx";
 
