@@ -40,8 +40,13 @@ export const AuthProvider = ({ children }) => {
         return response.data;
     };
 
-    const registerUser = async (fullName, email, password) => {
-        const response = await axios.post(`${API_URL}/auth/register`, { fullName, email, password });
+    const registerUser = async (fullName, email, password, referralCode = '') => {
+        const response = await axios.post(`${API_URL}/auth/register`, {
+            fullName,
+            email,
+            password,
+            referralCode
+        });
         localStorage.setItem('amai_token', response.data.token);
         setUser(response.data.user);
         return response.data;

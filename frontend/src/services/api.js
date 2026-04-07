@@ -149,3 +149,14 @@ export const verifyPayment = async (verificationData) => {
     const response = await api.post('/payment/verify', verificationData);
     return response.data;
 };
+
+// Reviews API
+export const getReviews = async (productId) => {
+    const response = await api.get(`/reviews/${productId}`);
+    return response.data.data || [];
+};
+
+export const createReview = async (reviewData) => {
+    const response = await api.post('/reviews', reviewData);
+    return response.data;
+};

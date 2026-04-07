@@ -1,12 +1,12 @@
 import { query } from '../../config/db.js';
 
-export async function createOrderRecord(userId, cartId, orderNumber, subtotalCents, totalCents) {
+export async function createOrderRecord(userId, cartId, orderNumber, subtotalCents, totalCents, pointsRedeemed = 0, discountPaise = 0) {
   const sql = `
-    INSERT INTO orders (user_id, cart_id, order_number, subtotal_cents, total_cents, status)
-    VALUES ($1, $2, $3, $4, $5, 'pending')
+    INSERT INTO orders (user_id, cart_id, order_number, subtotal_cents, total_cents, status, points_redeemed, discount_paise)
+    VALUES ($1, $2, $3, $4, $5, 'pending', $6, $7)
     RETURNING *
   `;
-  const { rows } = await query(sql, [userId, cartId, orderNumber, subtotalCents, totalCents]);
+  const { rows } = await query(sql, [userId, cartId, orderNumber, subtotalCents, totalCents, pointsRedeemed, discountPaise]);
   return rows[0];
 }
 

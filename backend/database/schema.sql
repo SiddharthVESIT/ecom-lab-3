@@ -6,6 +6,9 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(180) NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
   role VARCHAR(50) NOT NULL DEFAULT 'customer',
+  flavor_profile VARCHAR(50),
+  loyalty_points INTEGER NOT NULL DEFAULT 0,
+  referral_code VARCHAR(20) UNIQUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -60,11 +63,46 @@ CREATE TABLE IF NOT EXISTS orders (
   subtotal_cents INTEGER NOT NULL,
   shipping_cents INTEGER NOT NULL DEFAULT 0,
   total_cents INTEGER NOT NULL,
+  points_redeemed INTEGER NOT NULL DEFAULT 0,
+  discount_paise INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS reviews (
+  id BIGSERIAL PRIMARY KEY,
+  product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS referrals (
+  id BIGSERIAL PRIMARY KEY,
+  referrer_id UUID NOT NULL REFERENCES users(id),
+  referee_id UUID NOT NULL REFERENCES users(id),
+  referral_code VARCHAR(20) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  reward_granted BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT unique_referral UNIQUE (referee_id)
+);
+
+CREATE TABLE IF NOT EXISTS subscriptions (
+  id BIGSERIAL PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES users(id),
+  product_id BIGINT NOT NULL REFERENCES products(id),
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  start_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code);
 CREATE INDEX IF NOT EXISTS idx_products_category_active ON products(category, is_active);
 CREATE INDEX IF NOT EXISTS idx_carts_user_status ON carts(user_id, status);
 CREATE INDEX IF NOT EXISTS idx_cart_items_cart_id ON cart_items(cart_id);
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_product_id ON reviews(product_id);
+CREATE INDEX IF NOT EXISTS idx_referrals_referrer_id ON referrals(referrer_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON subscriptions(user_id);

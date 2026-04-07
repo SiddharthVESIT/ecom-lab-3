@@ -6,6 +6,7 @@ import orderRoutes from '../modules/orders/order.routes.js';
 import adminRoutes from '../modules/admin/admin.routes.js';
 import paymentRoutes from '../modules/payment/payment.routes.js';
 import usersRoutes from '../modules/users/users.routes.js';
+import reviewRoutes from '../modules/reviews/reviews.routes.js';
 
 const apiRouter = Router();
 
@@ -20,5 +21,6 @@ apiRouter.use('/orders', orderRoutes);
 apiRouter.use('/admin', adminRoutes);
 apiRouter.use('/payment', paymentRoutes);
 apiRouter.use('/users', usersRoutes);
+apiRouter.use('/reviews', reviewRoutes);
 
 export default apiRouter;

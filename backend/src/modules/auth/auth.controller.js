@@ -7,7 +7,7 @@ function isEmail(value) {
 
 export async function register(req, res) {
   try {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password, referralCode } = req.body;
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: 'fullName, email and password are required' });
     }
@@ -18,7 +18,7 @@ export async function register(req, res) {
       return res.status(400).json({ message: 'Password must be at least 8 characters' });
     }
 
-    const result = await registerUser({ fullName, email, password });
+    const result = await registerUser({ fullName, email, password, referralCodeUsed: referralCode });
     return res.status(201).json(result);
   } catch (error) {
     return res.status(400).json({ message: error.message });

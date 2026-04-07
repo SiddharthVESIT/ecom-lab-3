@@ -1,12 +1,12 @@
 import { query } from '../../config/db.js';
 
-export async function createUser({ fullName, email, passwordHash }) {
+export async function createUser({ fullName, email, passwordHash, referralCode }) {
   const sql = `
-    INSERT INTO users (full_name, email, password_hash)
-    VALUES ($1, $2, $3)
-    RETURNING id, full_name, email, role, created_at
+    INSERT INTO users (full_name, email, password_hash, referral_code)
+    VALUES ($1, $2, $3, $4)
+    RETURNING id, full_name, email, role, flavor_profile, loyalty_points, referral_code, created_at
   `;
-  const { rows } = await query(sql, [fullName, email, passwordHash]);
+  const { rows } = await query(sql, [fullName, email, passwordHash, referralCode]);
   return rows[0];
 }
 
