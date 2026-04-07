@@ -30,3 +30,5 @@ services:
         value: production
       - key: PORT
         value: 4000
+      - key: FIREBASE_SERVICE_ACCOUNT_PATH
+        value: firebase-service-account.json

@@ -17,6 +17,11 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+export const getProfile = async () => {
+    const response = await api.get('/users/profile');
+    return response.data;
+};
+
 export const getProducts = async (category = '', flavorProfile = '') => {
     let url = '/products';
     const params = new URLSearchParams();
@@ -136,6 +141,21 @@ export const getAdminStats = async () => {
 
 export const getAdminSales = async () => {
     const response = await api.get('/admin/sales-analytics');
+    return response.data.data;
+};
+
+export const getAbandonedCarts = async () => {
+    const response = await api.get('/admin/abandoned-carts');
+    return response.data.data;
+};
+
+export const getProcurement = async () => {
+    const response = await api.get('/admin/procurement');
+    return response.data.data;
+};
+
+export const restockProduct = async (id) => {
+    const response = await api.post(`/admin/procurement/${id}/restock`);
     return response.data.data;
 };
 

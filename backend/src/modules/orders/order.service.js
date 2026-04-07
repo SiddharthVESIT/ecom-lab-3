@@ -3,6 +3,13 @@ import * as cartRepo from '../cart/cart.repository.js';
 import crypto from 'crypto';
 import { query } from '../../config/db.js';
 
+/**
+ * Process order from cart
+ * @param {string} userId
+ * @param {string} shippingAddress
+ * @param {string} billingAddress
+ * @param {number} pointsToRedeem
+ */
 export async function processCheckout(userId, shippingAddress, billingAddress, pointsToRedeem = 0) {
     // 1. Get active cart
     const cart = await cartRepo.getActiveCartByUserId(userId);

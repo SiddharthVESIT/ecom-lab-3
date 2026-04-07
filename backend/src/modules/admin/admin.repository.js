@@ -104,3 +104,53 @@ export async function getProductSalesAnalytics() {
     `);
     return rows;
 }
+
+export async function getAbandonedCarts() {
+    const { rows } = await query(`
+        SELECT c.id as cart_id, u.full_name, u.email, c.created_at
+        FROM carts c
+        JOIN users u ON c.user_id = u.id
+        LEFT JOIN orders o ON o.cart_id = c.id
+        WHERE o.id IS NULL AND c.created_at < NOW() - INTERVAL '24 hours'
+    `);
+    return rows;
+}
+
+export async function getProcurement() {
+    // Calculates velocity over the past 30 days and projects stock remaining
+    const { rows } = await query(`
+        WITH sales_velocity AS (
+            SELECT 
+                oi.product_id, 
+                SUM(oi.quantity) as units_sold_30d
+            FROM order_items oi
+            JOIN orders o ON oi.order_id = o.id
+            WHERE o.created_at > NOW() - INTERVAL '30 days'
+            GROUP BY oi.product_id
+        )
+        SELECT 
+            p.id, 
+            p.name, 
+            p.stock_count, 
+            COALESCE(sv.units_sold_30d, 0) as past_30d_velocity,
+            CASE 
+                WHEN COALESCE(sv.units_sold_30d, 0) > 0 THEN 
+                    ROUND(p.stock_count / (sv.units_sold_30d / 30.0))
+                ELSE 999 
+            END as estimated_days_remaining
+        FROM products p
+        LEFT JOIN sales_velocity sv ON p.id = sv.product_id
+        ORDER BY estimated_days_remaining ASC
+    `);
+    return rows;
+}
+
+export async function restockProduct(productId) {
+    const { rows } = await query(`
+        UPDATE products 
+        SET stock_count = stock_count + 100 
+        WHERE id = $1 
+        RETURNING *
+    `, [productId]);
+    return rows[0];
+}

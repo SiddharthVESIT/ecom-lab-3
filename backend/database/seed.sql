@@ -25,7 +25,7 @@ VALUES
 
   ('SB-MISO-006', 'White Miso Bonbon', 'signature_bonbons',
    'Sweet white miso paste folded into a butterscotch ganache, creating an addictive savory-sweet profile with incredible depth.',
-   1900, 'https://images.unsplash.com/photo-1599599810694-b5b37304c041?w=600', TRUE),
+   1900, '/images/white-miso-bonbon.png', TRUE),
 
   -- Bars
   ('BR-DARKSEA-001', 'Dark Sea Salt Bar', 'bars',
@@ -34,7 +34,7 @@ VALUES
 
   ('BR-MATMILK-002', 'Matcha Milk Chocolate Bar', 'bars',
    'Creamy Hokkaido milk chocolate blended with stone-ground ceremonial matcha. Smooth, rich, and irresistibly green.',
-   1400, 'https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=600', TRUE),
+   1400, '/images/matcha-bar.png', TRUE),
 
   ('BR-GENMAICHA-003', 'Genmaicha Rice Crisp Bar', 'bars',
    'Toasted brown rice pieces folded into 55% milk chocolate, inspired by Japan''s beloved genmaicha tea. Crunchy, nutty, and satisfying.',

@@ -1,16 +1,18 @@
-import pg from 'pg';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { query } from '../../config/db.js';
+import { findUserById } from '../auth/auth.repository.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '../../../.env') });
-
-const { Pool } = pg;
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-});
+export async function getUserProfile(req, res) {
+  try {
+    const user = await findUserById(req.user.sub);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 export async function updateFlavorProfile(req, res) {
   try {
@@ -21,7 +23,7 @@ export async function updateFlavorProfile(req, res) {
       return res.status(400).json({ message: 'flavorProfile is required' });
     }
 
-    const result = await pool.query(
+    const result = await query(
       'UPDATE users SET flavor_profile = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
       [flavorProfile, userId]
     );

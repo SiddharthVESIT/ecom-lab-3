@@ -16,13 +16,13 @@ export async function createRazorpayOrder(req, res) {
     });
 
     const options = {
-      amount: amount * 100, // Razorpay expects amount in smallest unit (paise)
+      amount: Math.round(amount * 100), // Razorpay expects amount in smallest unit (paise)
       currency: "INR",
       receipt: `rcpt_${Date.now()}`
     };
 
     const order = await razorpay.orders.create(options);
-    res.json(order);
+    res.json({ ...order, key_id: process.env.RAZORPAY_KEY_ID });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

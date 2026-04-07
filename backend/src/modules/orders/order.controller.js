@@ -20,11 +20,11 @@ export async function getMyOrders(req, res) {
 
 export async function createOrder(req, res) {
     try {
-        const { shippingAddress, billingAddress } = req.body;
+        const { shippingAddress, billingAddress, appliedPoints = 0 } = req.body;
         const userId = req.user.sub || req.user.id;
 
         // 1. Process checkout (creates order as pending)
-        const order = await orderService.processCheckout(userId, shippingAddress, billingAddress);
+        const order = await orderService.processCheckout(userId, shippingAddress, billingAddress, appliedPoints);
         
         // 2. Mock Payment Processing Delay
         await new Promise(resolve => setTimeout(resolve, 1500));

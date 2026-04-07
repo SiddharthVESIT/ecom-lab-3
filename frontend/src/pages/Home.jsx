@@ -1,36 +1,66 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Home = () => {
+    // Animation variants
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    };
+
     return (
         <div className="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
 
             {/* Hero Section */}
             <div className="flex w-full flex-col">
                 <div className="w-full h-[600px] md:h-[750px] relative overflow-hidden bg-stone-dark">
-                    {/* Background Image */}
-                    <div className="absolute inset-0 z-0 bg-cover bg-center" data-alt="Dark stone surface with handcrafted luxury chocolates arranged artistically" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBY9S11KXRh0MKo6FrudrhmW5TeyNLKDzYru4_e_Q5SR-8VtiGcEGUPpafzbcEHaLfPjREnoZ3Cw2_pzK4nabt33PtiGK2KE4zG0joq8ZdI-fcm711RQoeVKW4v-v3EuzHRnTCMBoZ1t7Xg5j3z89Hxq8KmkLwro3iWWmLoMzTuOy_6bgjkDiJk-Hv6s5o2bnM3K--KrGKFanRjcs2-JrILuSM6_6bsiTL6zj95d6Whdl9_GNv9pstQYRkGkNDXBJ_KuhL7VKsv6Y5Z')" }}>
-                    </div>
+                    {/* Background Image with slow scale effect */}
+                    <motion.div 
+                        initial={{ scale: 1.1 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 6, ease: "easeOut" }}
+                        className="absolute inset-0 z-0 bg-cover bg-center" 
+                        data-alt="Dark stone surface with elegant matcha chocolates" 
+                        style={{ backgroundImage: "url('/images/landing-backdrop.png')" }}
+                    />
 
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                    <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4 md:px-20 max-w-[1280px] mx-auto w-full">
-                        <span className="text-primary text-sm md:text-base font-bold tracking-[0.2em] uppercase mb-4 animate-fade-in">Handcrafted by Amai</span>
-                        <h1 className="text-white font-serif text-5xl md:text-7xl font-light leading-tight tracking-tight mb-6 max-w-4xl">
+                    <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/30 to-black/10"></div>
+                    
+                    <motion.div 
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4 md:px-20 max-w-[1280px] mx-auto w-full"
+                    >
+                        <motion.span variants={itemVariants} className="text-primary text-sm md:text-base font-bold tracking-[0.2em] uppercase mb-4 text-shadow-sm">Handcrafted by Amai</motion.span>
+                        <motion.h1 variants={itemVariants} className="text-white font-serif text-5xl md:text-7xl lg:text-[80px] font-light leading-[1.1] tracking-tight mb-6 max-w-4xl drop-shadow-lg">
                             The Art of <br />Japanese Chocolate
-                        </h1>
-                        <p className="text-white/80 text-base md:text-lg max-w-xl font-light leading-relaxed mb-10">
+                        </motion.h1>
+                        <motion.p variants={itemVariants} className="text-white/90 text-base md:text-lg max-w-xl font-light leading-relaxed mb-10 drop-shadow-md">
                             A harmonious blend of ceremonial matcha, rare criollo cacao, and the minimalist aesthetic of Zen. Experience the fleeting moment of perfection.
-                        </p>
-                        <div className="flex gap-4">
-                            <Link to="/collections" className="flex items-center justify-center h-12 px-8 bg-primary hover:bg-[#d9a60f] text-charcoal text-sm font-bold tracking-widest uppercase rounded-lg transition-colors duration-300">
+                        </motion.p>
+                        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
+                            <Link to="/collections" className="flex items-center justify-center h-14 px-10 bg-primary hover:bg-[#d9a60f] hover:scale-105 shadow-[0_0_20px_rgba(217,166,15,0.4)] text-charcoal text-sm font-bold tracking-widest uppercase rounded-lg transition-all duration-300">
                                 Shop Collections
                             </Link>
-                            <Link to="/about" className="flex items-center justify-center h-12 px-8 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 text-sm font-bold tracking-widest uppercase rounded-lg transition-colors duration-300">
+                            <Link to="/about" className="flex items-center justify-center h-14 px-10 bg-black/40 backdrop-blur-md hover:bg-black/60 text-white border border-white/20 text-sm font-bold tracking-widest uppercase rounded-lg transition-all duration-300">
                                 Our Story
                             </Link>
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
                 </div>
             </div>
 
@@ -102,7 +132,7 @@ const Home = () => {
                                 </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">12pc Assortment of Matcha, Yuzu, and Sake.</p>
                                 <div className="flex items-center justify-between mt-4">
-                                    <span className="text-base font-medium text-charcoal dark:text-off-white">$48.00</span>
+                                    <span className="text-base font-medium text-charcoal dark:text-off-white">₹48.00</span>
                                     <Link to="/product/1" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
                                         View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                                     </Link>
@@ -121,7 +151,7 @@ const Home = () => {
                                 </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">Silky ganache made with premium Uji matcha.</p>
                                 <div className="flex items-center justify-between mt-4">
-                                    <span className="text-base font-medium text-charcoal dark:text-off-white">$32.00</span>
+                                    <span className="text-base font-medium text-charcoal dark:text-off-white">₹32.00</span>
                                     <Link to="/product/2" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
                                         View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                                     </Link>
@@ -141,7 +171,7 @@ const Home = () => {
                                 </Link>
                                 <p className="text-sm text-charcoal/60 dark:text-off-white/60">White chocolate infused with salted cherry blossoms.</p>
                                 <div className="flex items-center justify-between mt-4">
-                                    <span className="text-base font-medium text-charcoal dark:text-off-white">$24.00</span>
+                                    <span className="text-base font-medium text-charcoal dark:text-off-white">₹24.00</span>
                                     <Link to="/product/3" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors">
                                         View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                                     </Link>

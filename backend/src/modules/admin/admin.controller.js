@@ -75,3 +75,30 @@ export async function getSalesAnalytics(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+
+export async function getAbandonedCarts(req, res) {
+    try {
+        const carts = await adminService.getAbandonedCarts();
+        return res.status(200).json({ data: carts });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getProcurement(req, res) {
+    try {
+        const data = await adminService.getProcurement();
+        return res.status(200).json({ data });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+export async function restockProduct(req, res) {
+    try {
+        const product = await adminService.restockProduct(req.params.id);
+        return res.status(200).json({ data: product });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}

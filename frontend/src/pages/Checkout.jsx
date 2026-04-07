@@ -13,7 +13,21 @@ const Checkout = () => {
         firstName: '', lastName: '', address: '', country: 'India', postalCode: '', email: user?.email || ''
     });
     const [orderLoading, setOrderLoading] = useState(false);
+    const [loyaltyPoints, setLoyaltyPoints] = useState(0);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const { getProfile } = await import('../services/api');
+                const profile = await getProfile();
+                if (profile && profile.loyalty_points) {
+                    setLoyaltyPoints(profile.loyalty_points);
+                }
+            } catch (err) {}
+        };
+        fetchUserProfile();
+    }, []);
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -50,12 +64,12 @@ const Checkout = () => {
             const discountPaise = Math.floor(pointsToRedeem / 10) * 100;
             const finalAmountPaise = Math.max(0, subtotalPaise - discountPaise);
 
-            // 1. Create payment order on backend
+            // 1. Create payment order on backend (amount in INR)
             const paymentOrder = await createPaymentOrder(finalAmountPaise / 100);
 
-            // 2. Open Razorpay Checktout
+            // 2. Open Razorpay Checkout
             const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_SS9xOu4pGYiGh3",
+                key: paymentOrder.key_id || import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_SS9xOu4pGYiGh3",
                 amount: paymentOrder.amount, // in paise
                 currency: "INR",
                 name: "AMAI Chocolatiers",
@@ -109,7 +123,7 @@ const Checkout = () => {
     const subtotalPaise = items.reduce((sum, item) => sum + Number(item.line_total_cents), 0);
     const discountPaise = Math.floor(pointsToRedeem / 10) * 100;
     const totalPaise = Math.max(0, subtotalPaise - discountPaise);
-    const userMaxPoints = user?.loyaltyPoints || 0;
+    const userMaxPoints = loyaltyPoints || user?.loyaltyPoints || 0;
 
     return (
         <div className="flex-1 flex justify-center w-full px-6 py-10 lg:px-20 lg:py-16 bg-[#faf9f6] dark:bg-background-dark">
@@ -149,7 +163,7 @@ const Checkout = () => {
                     </div>
 
                     {/* Loyalty Points Redemption */}
-                    {user && userMaxPoints > 0 && items.length > 0 && (
+                    {userMaxPoints > 0 && items.length > 0 && (
                         <div className="mt-4 p-5 bg-primary/5 border border-primary/20 rounded-2xl">
                             <div className="flex items-center justify-between mb-3">
                                 <span className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2">
@@ -172,7 +186,7 @@ const Checkout = () => {
                                     />
                                     <span className="text-lg font-black text-primary min-w-[60px] text-right">{pointsToRedeem}</span>
                                 </div>
-                                <p className="text-[10px] font-medium text-primary mt-1 italic italic">-{formatCurrency(discountPaise)} saved from your total</p>
+                                <p className="text-[10px] font-medium text-primary mt-1 italic">-{formatCurrency(discountPaise)} saved from your total</p>
                             </div>
                         </div>
                     )}
@@ -256,6 +270,7 @@ const Checkout = () => {
                                         <option>Japan</option>
                                         <option>Canada</option>
                                         <option>United Kingdom</option>
+                                        <option>United States</option>
                                     </select>
                                 </div>
                                 <div className="col-span-2 md:col-span-1 flex flex-col gap-2">
