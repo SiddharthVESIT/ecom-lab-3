@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { getOrders } from '../services/api';
+import { getOrders, downloadInvoice } from '../services/api';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '../lib/utils';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const handleDownloadInvoice = async (orderId) => {
+        try {
+            const blob = await downloadInvoice(orderId);
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Amai_Invoice_${orderId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Failed to download invoice. Please try again later.');
+        }
+    };
 
     useEffect(() => {
         const fetchOrders = async () => {

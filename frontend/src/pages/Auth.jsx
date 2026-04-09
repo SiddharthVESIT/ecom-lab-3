@@ -68,7 +68,7 @@ const Auth = () => {
                 <div className="flex flex-col gap-10">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div>
-                            <h1 className="text-4xl font-bold text-text-main dark:text-white mb-2">My Amai Sanctuary</h1>
+                            <h1 className="text-4xl font-bold text-text-main dark:text-white mb-2">My Amai Dashboard</h1>
                             <p className="text-text-secondary">Welcome back, <span className="text-text-main dark:text-white font-bold">{user.fullName}</span></p>
                         </div>
                         <div className="flex gap-4">

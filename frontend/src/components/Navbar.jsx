@@ -81,6 +81,9 @@ const Navbar = () => {
                             <Link to="/dashboard" className="hidden sm:flex size-10 items-center justify-center rounded-lg bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-zen-black dark:text-white">
                                 <span className="material-symbols-outlined text-[20px]">person</span>
                             </Link>
+                            <button onClick={handleLogout} className="hidden sm:flex h-10 px-4 items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors text-sm font-bold shadow-sm">
+                                Sign Out
+                            </button>
                             <button onClick={handleLogout} className="sm:hidden flex size-10 items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors">
                                 <span className="material-symbols-outlined text-[20px]">logout</span>
                             </button>

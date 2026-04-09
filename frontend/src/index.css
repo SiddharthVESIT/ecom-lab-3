@@ -20,10 +20,14 @@
   --font-display: 'Playfair Display', serif;
   --font-serif: 'Playfair Display', serif;
   --font-sans: 'Outfit', sans-serif;
+  
+  /* Typographic polish: soften extreme font weights for a premium aesthetic */
+  --font-weight-black: 700;
+  --font-weight-bold: 500;
 }
 
 html {
-  /* scroll-behavior: smooth; */
+  scroll-behavior: smooth;
   height: -webkit-fill-available;
 }
 

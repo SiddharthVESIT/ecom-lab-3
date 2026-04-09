@@ -248,7 +248,7 @@ const Checkout = () => {
                         <div>
                             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                                 <span className="material-symbols-outlined text-primary">home_pin</span>
-                                Delivery Sanctuary
+                                Delivery Details
                             </h3>
                             <div className="grid grid-cols-2 gap-5">
                                 <div className="col-span-2 md:col-span-1 flex flex-col gap-2">
@@ -290,7 +290,7 @@ const Checkout = () => {
                                 disabled={orderLoading || items.length === 0}
                                 className="w-full md:w-auto h-14 px-12 bg-primary hover:bg-[#d9a60e] text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-primary/20 flex items-center justify-center gap-3 disabled:opacity-50"
                             >
-                                {orderLoading ? 'Processing Sanctuary Order...' : `Complete Ritual • ${formatCurrency(totalPaise)}`}
+                                {orderLoading ? 'Processing Order...' : `Complete Purchase • ${formatCurrency(totalPaise)}`}
                                 <span className="material-symbols-outlined">lock</span>
                             </button>
                         </div>
