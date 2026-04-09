@@ -7,7 +7,28 @@ export async function getUserProfile(req, res) {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    return res.status(200).json(user);
+
+    // Auto-generate missing legacy referral codes
+    if (!user.referral_code) {
+        const prefix = (user.full_name?.split(' ')[0] || 'AMAI').toUpperCase();
+        const newCode = `${prefix}${Math.floor(100 + Math.random() * 900)}`;
+        await query('UPDATE users SET referral_code = $1 WHERE id = $2', [newCode, user.id]);
+        user.referral_code = newCode;
+    }
+
+    // Implicit Club Membership logic based on engagement
+    const isClubMember = (user.loyalty_points && user.loyalty_points > 0);
+
+    return res.status(200).json({
+        id: user.id,
+        fullName: user.full_name,
+        email: user.email,
+        role: user.role,
+        flavorProfile: user.flavor_profile,
+        loyaltyPoints: user.loyalty_points,
+        referralCode: user.referral_code,
+        isClubMember: isClubMember
+    });
   } catch (error) {
     console.error('Error fetching user profile:', error);
     return res.status(500).json({ message: 'Internal server error' });
@@ -46,6 +67,41 @@ export async function updateFlavorProfile(req, res) {
 
   } catch (error) {
     console.error('Error updating flavor profile:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+export async function getAdminCustomers(req, res) {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    const { rows } = await query(`
+      SELECT 
+        u.id, 
+        u.full_name, 
+        u.email, 
+        u.created_at as joined_date,
+        u.loyalty_points,
+        COUNT(o.id) as total_orders,
+        COALESCE(SUM(o.total_amount_cents), 0) as lifetime_value_cents
+      FROM users u
+      LEFT JOIN orders o ON u.id = o.user_id AND o.status IN ('completed', 'paid')
+      WHERE u.role != 'admin'
+      GROUP BY u.id
+      ORDER BY lifetime_value_cents DESC
+    `);
+    
+    // Process cluster flags
+    const processed = rows.map(r => ({
+      ...r,
+      isClubMember: (r.loyalty_points > 0)
+    }));
+
+    return res.status(200).json({ data: processed });
+  } catch (error) {
+    console.error('Error fetching admin customers:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 }

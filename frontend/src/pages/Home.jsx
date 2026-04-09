@@ -65,17 +65,17 @@ const Home = () => {
                         className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4 md:px-20 max-w-[1280px] mx-auto w-full"
                     >
                         <motion.span variants={itemVariants} className="text-primary text-sm md:text-base font-bold tracking-[0.2em] uppercase mb-4 text-shadow-sm">Handcrafted by Amai</motion.span>
-                        <motion.h1 variants={itemVariants} className="text-white font-serif text-5xl md:text-7xl lg:text-[80px] font-light leading-[1.1] tracking-tight mb-6 max-w-4xl drop-shadow-lg">
+                        <motion.h1 variants={itemVariants} className="font-serif text-5xl md:text-7xl lg:text-[80px] font-black leading-[1.1] tracking-tight mb-6 max-w-4xl drop-shadow-2xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#fdf4d6] to-white">
                             The Art of <br />Japanese Chocolate
                         </motion.h1>
-                        <motion.p variants={itemVariants} className="text-white/90 text-base md:text-lg max-w-xl font-light leading-relaxed mb-10 drop-shadow-md">
+                        <motion.p variants={itemVariants} className="text-white/90 text-base md:text-lg max-w-xl font-medium leading-relaxed mb-10 drop-shadow-lg">
                             A harmonious blend of ceremonial matcha, rare criollo cacao, and the minimalist aesthetic of Zen. Experience the fleeting moment of perfection.
                         </motion.p>
                         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
-                            <Link to="/collections" className="flex items-center justify-center h-14 px-10 bg-primary hover:bg-[#d9a60f] hover:scale-105 shadow-[0_0_20px_rgba(217,166,15,0.4)] text-charcoal text-sm font-bold tracking-widest uppercase rounded-lg transition-all duration-300">
+                            <Link to="/collections" className="flex items-center justify-center h-14 px-10 bg-primary hover:bg-[#d9a60f] hover:scale-105 hover:-translate-y-1 shadow-[0_0_20px_rgba(217,166,15,0.4)] text-charcoal text-sm font-black tracking-[0.2em] uppercase rounded-xl transition-all duration-300">
                                 Shop Collections
                             </Link>
-                            <Link to="/about" className="flex items-center justify-center h-14 px-10 bg-black/40 backdrop-blur-md hover:bg-black/60 text-white border border-white/20 text-sm font-bold tracking-widest uppercase rounded-lg transition-all duration-300">
+                            <Link to="/about" className="flex items-center justify-center h-14 px-10 bg-black/40 backdrop-blur-md hover:bg-black/60 hover:-translate-y-1 text-white border border-white/20 hover:border-white/40 text-sm font-bold tracking-[0.2em] uppercase rounded-xl transition-all duration-300">
                                 Our Story
                             </Link>
                         </motion.div>

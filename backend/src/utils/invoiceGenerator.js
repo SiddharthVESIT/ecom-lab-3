@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export async function generateInvoicePDF(orderId, totalCents, items) {
+export async function generateInvoicePDF(orderId, totalCents, items, discountPaise = 0) {
     return new Promise((resolve, reject) => {
         const doc = new PDFDocument({ margin: 50 });
         
@@ -30,7 +30,7 @@ export async function generateInvoicePDF(orderId, totalCents, items) {
         doc.font('Helvetica-Bold');
         doc.text('Item', 50, yCursor);
         doc.text('Qty', 350, yCursor);
-        doc.text('Price', 450, yCursor);
+        doc.text('Price (INR)', 450, yCursor);
         doc.font('Helvetica');
         
         yCursor += 20;
@@ -38,7 +38,7 @@ export async function generateInvoicePDF(orderId, totalCents, items) {
         items.forEach(item => {
             doc.text(`${item.name}`, 50, yCursor, { width: 280, height: 15 });
             doc.text(`${item.quantity}`, 350, yCursor);
-            doc.text(`$${(item.price_at_purchase_cents / 100).toFixed(2)}`, 450, yCursor);
+            doc.text(`₹${(item.price_at_purchase_cents / 100).toFixed(2)}`, 450, yCursor);
             yCursor += 25;
             
             // Add extra pages if list is too long
@@ -51,7 +51,13 @@ export async function generateInvoicePDF(orderId, totalCents, items) {
         doc.text('---------------------------------------------------------', 50, yCursor);
         yCursor += 20;
         doc.font('Helvetica-Bold');
-        doc.text(`Total Amount Paid: $${(totalCents / 100).toFixed(2)}`, 300, yCursor);
+        
+        if (discountPaise > 0) {
+            doc.text(`Discount Applied: -₹${(discountPaise / 100).toFixed(2)}`, 300, yCursor);
+            yCursor += 20;
+        }
+        
+        doc.text(`Total Amount Paid: ₹${(totalCents / 100).toFixed(2)}`, 300, yCursor);
         doc.font('Helvetica');
         
         yCursor += 40;

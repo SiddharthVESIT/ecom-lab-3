@@ -101,7 +101,7 @@ const Orders = () => {
                                         ))}
                                     </div>
                                     <div className="mt-8 flex justify-end">
-                                        {order.status === 'completed' && (
+                                        {['completed', 'paid'].includes(order.status?.toLowerCase()) && (
                                             <button 
                                                 onClick={() => handleDownloadInvoice(order.id)}
                                                 className="text-primary hover:text-[#d9a60e] font-bold text-sm underline flex items-center gap-1"

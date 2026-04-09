@@ -12,7 +12,7 @@ export async function createUser({ fullName, email, passwordHash, referralCode }
 
 export async function findUserByEmail(email) {
   const { rows } = await query(
-    'SELECT id, full_name, email, password_hash, role, flavor_profile FROM users WHERE email = $1 LIMIT 1',
+    'SELECT id, full_name, email, password_hash, role, flavor_profile, loyalty_points, referral_code FROM users WHERE email = $1 LIMIT 1',
     [email]
   );
   return rows[0] || null;
@@ -20,7 +20,7 @@ export async function findUserByEmail(email) {
 
 export async function findUserById(id) {
   const { rows } = await query(
-    'SELECT id, full_name, email, role, flavor_profile FROM users WHERE id = $1 LIMIT 1',
+    'SELECT id, full_name, email, role, flavor_profile, loyalty_points, referral_code FROM users WHERE id = $1 LIMIT 1',
     [id]
   );
   return rows[0] || null;

@@ -35,7 +35,7 @@ export async function createOrder(req, res) {
         
         // 4. Generate Invoice PDF
         const items = await orderRepo.getOrderItems(order.id);
-        await generateInvoicePDF(order.id, order.total_cents, items);
+        await generateInvoicePDF(order.id, order.total_cents, items, order.discount_paise);
 
         return res.status(201).json({ message: 'Order created and payment successful', data: order, success: true });
     } catch (error) {

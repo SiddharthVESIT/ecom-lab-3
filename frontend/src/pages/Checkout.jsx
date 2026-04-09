@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getCart, createOrder, removeFromCart, createPaymentOrder, verifyPayment } from '../services/api';
+import { getCart, createOrder, removeFromCart, createPaymentOrder, verifyPayment, applyReferralCode } from '../services/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { formatCurrency } from '../lib/utils';
@@ -9,6 +9,8 @@ const Checkout = () => {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
+    const [referralCode, setReferralCode] = useState('');
+    const [applyingCode, setApplyingCode] = useState(false);
     const [shipping, setShipping] = useState({
         firstName: '', lastName: '', address: '', country: 'India', postalCode: '', email: user?.email || ''
     });
@@ -42,6 +44,30 @@ const Checkout = () => {
         };
         fetchCart();
     }, []);
+
+    useEffect(() => {
+        if (cart?.items && loyaltyPoints > 0) {
+            const subtotalPaise = cart.items.reduce((sum, item) => sum + Number(item.line_total_cents), 0);
+            const maxRe = Math.floor(subtotalPaise / 100) * 10;
+            // Only auto-update if pointsToRedeem hasn't been manually lowered by user
+            setPointsToRedeem(Math.min(loyaltyPoints, maxRe));
+        }
+    }, [cart, loyaltyPoints]);
+
+    const handleApplyReferral = async () => {
+        if (!referralCode.trim()) return;
+        setApplyingCode(true);
+        try {
+            await applyReferralCode(referralCode.trim());
+            alert('Referral applied! 100 loyalty beans added to your balance.');
+            setLoyaltyPoints(prev => prev + 100);
+            setReferralCode('');
+        } catch (error) {
+            alert(error.response?.data?.message || 'Invalid or already used code.');
+        } finally {
+            setApplyingCode(false);
+        }
+    };
 
     const handleRemove = async (itemId) => {
         try {
@@ -88,7 +114,7 @@ const Checkout = () => {
                             const res = await createOrder({
                                 shippingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`,
                                 billingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`,
-                                pointsToRedeem: Number(pointsToRedeem)
+                                appliedPoints: Number(pointsToRedeem)
                             });
                             navigate(`/payment-success?orderId=${res.data.id}`);
                         } else {
@@ -220,6 +246,28 @@ const Checkout = () => {
                         <div className="flex items-center gap-1.5">
                             <span className="material-symbols-outlined text-sm">local_shipping</span>
                             <span>Chilled</span>
+                        </div>
+                    </div>
+
+                    {/* Referral Code Box */}
+                    <div className="mt-2 p-5 bg-white dark:bg-[#1a160c] border border-border-subtle rounded-2xl">
+                        <h3 className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-3">Redeem Referral Code</h3>
+                        <div className="flex gap-2">
+                            <input 
+                                type="text"
+                                value={referralCode}
+                                onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                                placeholder="ENTER CODE"
+                                className="flex-1 h-10 px-3 bg-[#f8f8f6] dark:bg-[#2c2618] border border-transparent rounded-lg outline-none focus:border-primary text-sm font-bold uppercase transition-colors"
+                            />
+                            <button 
+                                onClick={handleApplyReferral}
+                                disabled={applyingCode || !referralCode.trim()}
+                                className="h-10 px-5 bg-[#181611] dark:bg-white text-white dark:text-[#181611] text-sm font-bold rounded-lg disabled:opacity-50 hover:bg-primary hover:text-white transition-colors"
+                                type="button"
+                            >
+                                {applyingCode ? 'Wait...' : 'Apply'}
+                            </button>
                         </div>
                     </div>
                 </div>

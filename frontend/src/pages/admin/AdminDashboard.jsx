@@ -401,6 +401,7 @@ const AdminDashboard = () => {
                                         <th className="px-6 py-4">Joined</th>
                                         <th className="px-6 py-4 text-center">Total Orders</th>
                                         <th className="px-6 py-4">CRM Strategy</th>
+                                        <th className="px-6 py-4">Status</th>
                                         <th className="px-6 py-4 text-right">Lifetime Value</th>
                                     </tr>
                                     </thead>
@@ -422,6 +423,14 @@ const AdminDashboard = () => {
                                                 <span className={`inline-block px-3 py-1 text-[10px] uppercase tracking-widest rounded border font-bold ${strategy.color}`}>
                                                     {strategy.label}
                                                 </span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {c.isClubMember && (
+                                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fdf4d6] text-primary border border-primary/20 rounded text-[10px] uppercase tracking-widest font-black">
+                                                        <span className="material-symbols-outlined text-[12px]">workspace_premium</span>
+                                                        Club Member
+                                                    </span>
+                                                )}
                                             </td>
                                             <td className="px-6 py-4 text-right font-black">
                                                 {formatCurrency(c.lifetime_value_cents)}

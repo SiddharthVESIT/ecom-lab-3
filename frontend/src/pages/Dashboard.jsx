@@ -77,11 +77,25 @@ const Dashboard = () => {
                     
                     {/* User Profile Card */}
                     <div className="bg-white dark:bg-[#1a160d] p-6 rounded-2xl border border-border-subtle shadow-sm flex flex-col items-center text-center">
-                        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary text-3xl font-black mb-4 uppercase">
-                            {user.fullName?.charAt(0)}
+                        <div className="size-20 bg-primary/10 rounded-full flex items-center justify-center border-2 border-primary/20 relative mx-auto lg:mx-0">
+                            <span className="text-3xl font-display font-black text-primary">
+                                {user?.fullName?.charAt(0) || 'A'}
+                            </span>
+                            {(user?.isClubMember || user?.loyaltyPoints > 0 || user?.loyalty_points > 0) && (
+                                <div className="absolute -bottom-2 -right-2 bg-white dark:bg-[#15120a] rounded-full p-1 shadow-md border border-primary/20">
+                                    <span className="material-symbols-outlined text-[20px] text-primary block">workspace_premium</span>
+                                </div>
+                            )}
                         </div>
                         <h2 className="text-xl font-bold text-text-main dark:text-white mb-1">{user.fullName}</h2>
-                        <p className="text-text-secondary text-sm mb-6">{user.email}</p>
+                        <div className="flex items-center justify-center gap-2 mb-6">
+                            <span className="text-text-secondary text-sm">{user.email}</span>
+                            {(user?.isClubMember || user?.loyaltyPoints > 0 || user?.loyalty_points > 0) && (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#fdf4d6] dark:bg-[#252118] text-primary border border-primary/20 rounded text-[10px] uppercase tracking-widest font-black">
+                                    Club Member
+                                </span>
+                            )}
+                        </div>
                         
                         <div className="w-full bg-[#f4f3f0] dark:bg-[#252118] rounded-xl p-4 flex justify-between items-center border border-primary/20">
                             <span className="text-sm font-bold uppercase tracking-widest text-text-secondary">Loyalty Beans</span>
@@ -138,12 +152,12 @@ const Dashboard = () => {
                                         Share your unique code. When friends join and place an order, they receive beans, and you earn <span className="font-bold text-primary">200 Beans</span>.
                                     </p>
                                 </div>
-                                <div className="bg-[#f4f3f0] dark:bg-black/20 p-4 rounded-xl border border-dashed border-primary/40 text-center min-w-[200px]">
-                                    <span className="text-xs font-bold text-text-secondary block mb-1 uppercase tracking-widest">Your Private Code</span>
-                                    <div className="flex items-center justify-center gap-2">
+                                <div className="bg-[#f4f3f0] dark:bg-black/20 p-6 rounded-xl border border-dashed border-primary/40 text-center min-w-[200px]">
+                                    <span className="text-xs font-bold text-text-secondary block mb-3 uppercase tracking-widest">Your Private Code</span>
+                                    <div className="flex flex-col items-center justify-center gap-4">
                                         <span className="text-2xl font-black tracking-widest text-primary">{user.referralCode || user.referral_code || 'AMAI-USER'}</span>
-                                        <button onClick={handleCopy} className="text-primary hover:text-[#d9a60e] hover:scale-110 transition-transform">
-                                            <span className="material-symbols-outlined text-[20px]">content_copy</span>
+                                        <button onClick={handleCopy} className="w-full py-2 bg-primary text-white font-bold rounded-xl text-sm shadow-md hover:shadow-primary/20 hover:-translate-y-1 transition-all">
+                                            Copy Link
                                         </button>
                                     </div>
                                 </div>

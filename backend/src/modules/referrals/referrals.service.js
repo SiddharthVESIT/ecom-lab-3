@@ -29,10 +29,10 @@ export async function applyReferralCode(userId, code) {
     throw new Error('Cannot use your own referral code');
   }
 
-  // Check if already used a code
-  const existing = await query('SELECT id FROM referrals WHERE referee_id = $1', [userId]);
+  // Check if already used THIS specific code
+  const existing = await query('SELECT id FROM referrals WHERE referee_id = $1 AND referral_code = $2', [userId, code]);
   if (existing.rows.length > 0) {
-    throw new Error('You have already applied a referral code');
+    throw new Error('You have already applied THIS referral code');
   }
 
   // Record referral and add points

@@ -121,7 +121,7 @@ const Auth = () => {
                                     </div>
                                     <p className="text-sm text-text-secondary mt-3">Share this code with friends. They get a gift, you earn beans.</p>
                                 </div>
-                                <button className="w-full mt-4 py-3 bg-primary text-white font-bold rounded-xl text-sm shadow-lg hover:shadow-primary/20 transition-all">Copy Link</button>
+                                <button onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText(user.referralCode || user.referral_code); alert('Link Copied to clipboard!'); }} className="w-full mt-4 py-3 bg-primary hover:-translate-y-1 text-white font-bold rounded-xl text-sm shadow-lg hover:shadow-primary/20 transition-all">Copy Link</button>
                             </div>
 
                             <div className="bg-primary/5 border border-primary/20 p-6 rounded-3xl">

@@ -123,7 +123,7 @@ const ProductDetails = () => {
                             <div className="flex flex-col gap-1">
                                 <div className="flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary text-xl">auto_renew</span>
-                                    <span className="text-primary font-black tracking-tighter text-xl leading-none">AUTO_RENEW</span>
+                                    <span className="text-primary font-black tracking-tighter text-lg leading-none mt-1">SUBSCRIBE & SAVE</span>
                                 </div>
                                 <span className="font-bold text-sm text-text-main dark:text-white">Purchase Options</span>
                             </div>
