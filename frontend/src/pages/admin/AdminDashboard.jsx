@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { getAdminOrders, getAdminOrderDetails, updateOrderStatus, getAdminInventory, updateInventory, getAdminCustomers, getAdminStats, getAdminSales } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { formatCurrency } from '../../lib/utils';
 
 const AdminDashboard = () => {
     const { user, loading: authLoading } = useAuth();
@@ -24,6 +25,16 @@ const AdminDashboard = () => {
     // Editing state for inventory
     const [editingProduct, setEditingProduct] = useState(null);
     const [editStockCount, setEditStockCount] = useState('');
+
+    const getCRMStrategy = (customer) => {
+        const ltv = customer.lifetime_value_cents || 0;
+        const orders = Number(customer.total_orders) || 0;
+        
+        if (ltv >= 1000000) return { label: 'Select (Ads)', color: 'bg-purple-100 text-purple-800 border-purple-200' };
+        if (orders === 0) return { label: 'Acquire (Quiz)', color: 'bg-[#fff7ed] text-orange-800 border-orange-200' };
+        if (orders >= 1 && ltv < 500000) return { label: 'Retain (Loyalty)', color: 'bg-green-100 text-green-800 border-green-200' };
+        return { label: 'Extend (Recovery)', color: 'bg-blue-100 text-blue-800 border-blue-200' };
+    };
 
     useEffect(() => {
         if (!user || user.role !== 'admin') return;
@@ -357,47 +368,75 @@ const AdminDashboard = () => {
                     )}
                     
                     {activeTab === 'customers' && (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm text-zen-black dark:text-gray-200">
-                                <thead className="bg-[#f8f8f6] dark:bg-[#221d10] text-xs uppercase font-bold text-zen-brown dark:text-gray-400">
+                        <div className="bg-white dark:bg-[#1a160c] rounded-2xl shadow-sm border border-border-subtle overflow-hidden">
+                            <div className="p-6 border-b border-border-subtle bg-gray-50 dark:bg-black/20">
+                                <h3 className="text-lg font-bold text-text-main dark:text-white mb-2">CRM Strategy Overview</h3>
+                                <p className="text-sm text-text-secondary mb-4">Users are automatically clustered based on Lifetime Value (LTV) and Order Frequency to inform targeted retention and acquisition strategies.</p>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div className="p-3 bg-purple-50 dark:bg-purple-900/10 border border-purple-100 rounded-lg">
+                                        <span className="text-xs font-bold text-purple-800 uppercase">Select</span>
+                                        <p className="text-xs text-text-secondary mt-1">Managed via Ads.</p>
+                                    </div>
+                                    <div className="p-3 bg-orange-50 dark:bg-orange-900/10 border border-orange-100 rounded-lg">
+                                        <span className="text-xs font-bold text-orange-800 uppercase">Acquire</span>
+                                        <p className="text-xs text-text-secondary mt-1">0 orders. Driven by Flavor Quiz.</p>
+                                    </div>
+                                    <div className="p-3 bg-green-50 dark:bg-green-900/10 border border-green-100 rounded-lg">
+                                        <span className="text-xs font-bold text-green-800 uppercase">Retain</span>
+                                        <p className="text-xs text-text-secondary mt-1">1+ orders. Loyalty & Referrals.</p>
+                                    </div>
+                                    <div className="p-3 bg-blue-50 dark:bg-blue-900/10 border border-blue-100 rounded-lg">
+                                        <span className="text-xs font-bold text-blue-800 uppercase">Extend</span>
+                                        <p className="text-xs text-text-secondary mt-1">High LTV. Cart Recovery push.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-sm whitespace-nowrap">
+                                    <thead className="bg-[#fcfbf9] dark:bg-[#252118] border-b border-border-subtle text-text-secondary uppercase tracking-widest text-[10px] font-bold">
                                     <tr>
                                         <th className="px-6 py-4">ID</th>
                                         <th className="px-6 py-4">Name</th>
                                         <th className="px-6 py-4">Email</th>
                                         <th className="px-6 py-4">Joined</th>
-                                        <th className="px-6 py-4">Total Orders</th>
+                                        <th className="px-6 py-4 text-center">Total Orders</th>
+                                        <th className="px-6 py-4">CRM Strategy</th>
                                         <th className="px-6 py-4 text-right">Lifetime Value</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {customers.map((customer) => (
-                                        <tr key={customer.id} className="border-b border-zen-highlight dark:border-zen-highlight-dark hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                                            <td className="px-6 py-4 font-mono text-xs">{customer.id.substring(0, 8)}</td>
-                                            <td className="px-6 py-4 font-bold max-w-xs truncate">
-                                                {customer.full_name}
-                                                {customer.lifetime_value_cents > 10000 ? (
-                                                    <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-500">🥇 Gold VIP</span>
-                                                ) : customer.lifetime_value_cents >= 5000 ? (
-                                                    <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400">🥈 Silver</span>
-                                                ) : (
-                                                    <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-50 text-orange-800 dark:bg-orange-900/30 dark:text-orange-500">🥉 Bronze</span>
-                                                )}
+                                    </thead>
+                                    <tbody>
+                                    {customers.map(c => {
+                                        const strategy = getCRMStrategy(c);
+                                        return (
+                                        <tr key={c.id} className="border-b border-border-subtle hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-text-main dark:text-gray-300">
+                                            <td className="px-6 py-4 font-mono text-xs">{c.id.substring(0, 8)}...</td>
+                                            <td className="px-6 py-4 font-bold">{c.full_name}</td>
+                                            <td className="px-6 py-4 text-text-secondary">{c.email}</td>
+                                            <td className="px-6 py-4">{new Date(c.joined_date).toLocaleDateString()}</td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className="inline-flex items-center justify-center min-w-[24px] h-6 rounded-full bg-primary/10 text-primary font-bold text-xs">
+                                                    {c.total_orders}
+                                                </span>
                                             </td>
-                                            <td className="px-6 py-4">{customer.email}</td>
-                                            <td className="px-6 py-4">{new Date(customer.joined_date).toLocaleDateString()}</td>
-                                            <td className="px-6 py-4 font-bold">{customer.total_orders}</td>
-                                            <td className="px-6 py-4 text-right font-medium text-emerald-600 dark:text-emerald-400">
-                                                ₹{(customer.lifetime_value_cents / 100).toFixed(2)}
+                                            <td className="px-6 py-4">
+                                                <span className={`inline-block px-3 py-1 text-[10px] uppercase tracking-widest rounded border font-bold ${strategy.color}`}>
+                                                    {strategy.label}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-right font-black">
+                                                {formatCurrency(c.lifetime_value_cents)}
                                             </td>
                                         </tr>
-                                    ))}
+                                        );
+                                    })}
                                     {customers.length === 0 && (
                                         <tr>
-                                            <td colSpan="6" className="px-6 py-8 text-center text-zen-brown">No customers found.</td>
+                                            <td colSpan="7" className="px-6 py-8 text-center text-zen-brown">No customers found.</td>
                                         </tr>
                                     )}
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
 

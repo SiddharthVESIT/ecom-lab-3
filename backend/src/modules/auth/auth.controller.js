@@ -67,7 +67,9 @@ export async function session(req, res) {
         fullName: user.full_name,
         email: user.email,
         role: user.role,
-        flavorProfile: user.flavor_profile
+        flavorProfile: user.flavor_profile,
+        loyaltyPoints: user.loyalty_points,
+        referralCode: user.referral_code
       }
     });
   } catch (error) {

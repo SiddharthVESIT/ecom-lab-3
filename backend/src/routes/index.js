@@ -7,6 +7,7 @@ import adminRoutes from '../modules/admin/admin.routes.js';
 import paymentRoutes from '../modules/payment/payment.routes.js';
 import usersRoutes from '../modules/users/users.routes.js';
 import reviewRoutes from '../modules/reviews/reviews.routes.js';
+import referralRoutes from '../modules/referrals/referrals.routes.js';
 
 const apiRouter = Router();
 
@@ -22,5 +23,6 @@ apiRouter.use('/admin', adminRoutes);
 apiRouter.use('/payment', paymentRoutes);
 apiRouter.use('/users', usersRoutes);
 apiRouter.use('/reviews', reviewRoutes);
+apiRouter.use('/referrals', referralRoutes);
 
 export default apiRouter;

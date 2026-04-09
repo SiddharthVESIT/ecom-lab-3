@@ -110,14 +110,16 @@ const Auth = () => {
                             <div className="bg-white dark:bg-[#1a160d] border border-border-subtle p-6 rounded-3xl shadow-sm">
                                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary">share</span>
-                                    Share the Ritual
+                                    Share the Amai Experience
                                 </h3>
-                                <p className="text-xs text-text-secondary leading-relaxed mb-6">
-                                    Invite a friend. They get <span className="font-bold text-text-main dark:text-white">₹50 off</span>, and you earn <span className="font-bold text-primary">200 Amai Beans</span>.
-                                </p>
-                                <div className="bg-[#f4f3f0] dark:bg-[#252118] p-4 rounded-xl border border-dashed border-primary/40 text-center">
-                                    <span className="text-xs font-bold text-text-secondary block mb-1 uppercase tracking-widest">Your Code</span>
-                                    <span className="text-2xl font-black tracking-widest text-primary">{user.referralCode || 'AMAI-USER'}</span>
+                                {/* Referral Section (To be moved to Dashboard) */}
+                                <div className="mb-10 text-center">
+                                    <h3 className="text-sm font-bold text-zen-black dark:text-white uppercase tracking-widest mb-4">Refer a Friend</h3>
+                                    <div className="inline-block bg-[#f4f3f0] dark:bg-[#252118] p-4 rounded-xl border border-dashed border-primary/40 text-center">
+                                        <span className="text-xs font-bold text-text-secondary block mb-1 uppercase tracking-widest">Your Code</span>
+                                        <span className="text-2xl font-black tracking-widest text-primary">{user.referralCode || user.referral_code || 'AMAI-USER'}</span>
+                                    </div>
+                                    <p className="text-sm text-text-secondary mt-3">Share this code with friends. They get a gift, you earn beans.</p>
                                 </div>
                                 <button className="w-full mt-4 py-3 bg-primary text-white font-bold rounded-xl text-sm shadow-lg hover:shadow-primary/20 transition-all">Copy Link</button>
                             </div>
@@ -152,10 +154,14 @@ const Auth = () => {
 
             <div className="relative w-full max-w-[440px] bg-white dark:bg-[#1a160d] rounded-2xl shadow-xl overflow-hidden border border-border-subtle">
                 <div className="pt-12 pb-6 px-10 text-center">
-                    <h1 className="text-text-main dark:text-white tracking-tight text-3xl font-bold mb-2">
-                        {isLogin ? 'The Ritual Returns' : 'Begin the Journey'}
+                    <h1 className="text-4xl font-black font-display tracking-tight text-text-main mb-2">
+                        {isLogin ? 'Welcome Back' : 'Create an Account'}
                     </h1>
-                    <p className="text-text-secondary text-sm">Experience the art of Japanese chocolate crafting.</p>
+                    <p className="text-text-secondary leading-relaxed max-w-sm mx-auto 2xl:mx-0">
+                        {isLogin 
+                            ? "Sign in to access your curated selections, track orders, and view your loyalty beans."
+                            : "Join the Amai society. Earn loyalty beans with every purchase and enjoy exclusive access to limited drops."}
+                    </p>
                 </div>
 
                 <div className="px-10 pb-6">

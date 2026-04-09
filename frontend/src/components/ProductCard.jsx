@@ -59,7 +59,7 @@ const ProductCard = ({ product }) => {
             </Link>
             <div className="flex-grow flex flex-col justify-between">
                 <div className="flex justify-between items-start">
-                    <h3 className="text-zen-black dark:text-white text-lg font-bold leading-tight group-hover:text-primary transition-colors">
+                    <h3 className="text-zen-black dark:text-white text-lg font-bold font-display leading-tight group-hover:text-primary transition-colors">
                         {product.name}
                     </h3>
                     <p className="text-zen-black dark:text-white text-lg font-bold">{priceFormatted}</p>

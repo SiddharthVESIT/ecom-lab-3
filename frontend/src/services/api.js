@@ -178,5 +178,21 @@ export const getReviews = async (productId) => {
 
 export const createReview = async (reviewData) => {
     const response = await api.post('/reviews', reviewData);
+    return response.data.data;
+};
+
+// Referrals
+export const getMyReferrals = async () => {
+    const response = await api.get('/referrals/my-referrals');
+    return response.data.data;
+};
+
+export const verifyReferralCode = async (code) => {
+    const response = await api.post('/referrals/verify', { code });
+    return response.data.valid;
+};
+
+export const applyReferralCode = async (code) => {
+    const response = await api.post('/referrals/apply', { code });
     return response.data;
 };

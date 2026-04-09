@@ -120,10 +120,13 @@ const ProductDetails = () => {
                     {/* Subscription Selection */}
                     <div className="mb-8 p-4 border border-primary/20 bg-primary/5 rounded-xl">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="font-bold text-sm text-text-main dark:text-white flex items-center gap-2">
-                                <span className="material-symbols-outlined text-primary text-lg">auto_renew</span>
-                                Purchase Options
-                            </span>
+                            <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary text-xl">auto_renew</span>
+                                    <span className="text-primary font-black tracking-tighter text-xl leading-none">AUTO_RENEW</span>
+                                </div>
+                                <span className="font-bold text-sm text-text-main dark:text-white">Purchase Options</span>
+                            </div>
                             <span className="text-[10px] uppercase font-black tracking-widest text-primary px-2 py-0.5 bg-primary/10 rounded">Recommended</span>
                         </div>
                         <div className="flex flex-col gap-2">

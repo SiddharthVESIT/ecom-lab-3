@@ -75,7 +75,9 @@ export async function loginUser({ email, password }) {
       fullName: user.full_name,
       email: user.email,
       role: user.role,
-      flavorProfile: user.flavor_profile
+      flavorProfile: user.flavor_profile,
+      loyaltyPoints: user.loyalty_points,
+      referralCode: user.referral_code
     }
   };
 }
