@@ -69,7 +69,8 @@ export async function session(req, res) {
         role: user.role,
         flavorProfile: user.flavor_profile,
         loyaltyPoints: user.loyalty_points,
-        referralCode: user.referral_code
+        referralCode: user.referral_code,
+        isClubMember: user.is_club_member || false
       }
     });
   } catch (error) {

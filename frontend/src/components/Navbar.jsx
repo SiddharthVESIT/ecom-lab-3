@@ -71,7 +71,7 @@ const Navbar = () => {
                         <div className="flex items-center gap-3">
                             <Link to="/dashboard" className="hidden sm:flex flex-col items-end group">
                                 <span className="text-sm font-bold text-zen-black dark:text-white group-hover:text-primary transition-colors flex items-center gap-1.5">
-                                    {(user.isClubMember || user.loyaltyPoints > 0 || user.loyalty_points > 0) && (
+                                    {user.isClubMember && (
                                         <span className="material-symbols-outlined text-[14px] text-primary" title="Amai Club Member">workspace_premium</span>
                                     )}
                                     {user.fullName?.split(' ')[0]}

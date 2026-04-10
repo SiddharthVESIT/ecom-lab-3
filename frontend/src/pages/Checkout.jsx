@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { formatCurrency } from '../lib/utils';
 
 const Checkout = () => {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
     const [pointsToRedeem, setPointsToRedeem] = useState(0);
@@ -116,6 +116,8 @@ const Checkout = () => {
                                 billingAddress: `${shipping.address}, ${shipping.country}, ${shipping.postalCode}`,
                                 appliedPoints: Number(pointsToRedeem)
                             });
+                            // Refresh user data so loyalty beans update immediately
+                            await refreshUser();
                             navigate(`/payment-success?orderId=${res.data.id}`);
                         } else {
                             alert("Payment verification failed.");

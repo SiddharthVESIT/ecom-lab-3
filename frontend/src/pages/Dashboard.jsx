@@ -81,7 +81,7 @@ const Dashboard = () => {
                             <span className="text-3xl font-display font-black text-primary">
                                 {user?.fullName?.charAt(0) || 'A'}
                             </span>
-                            {(user?.isClubMember || user?.loyaltyPoints > 0 || user?.loyalty_points > 0) && (
+                            {user?.isClubMember && (
                                 <div className="absolute -bottom-2 -right-2 bg-white dark:bg-[#15120a] rounded-full p-1 shadow-md border border-primary/20">
                                     <span className="material-symbols-outlined text-[20px] text-primary block">workspace_premium</span>
                                 </div>
@@ -90,7 +90,7 @@ const Dashboard = () => {
                         <h2 className="text-xl font-bold text-text-main dark:text-white mb-1">{user.fullName}</h2>
                         <div className="flex items-center justify-center gap-2 mb-6">
                             <span className="text-text-secondary text-sm">{user.email}</span>
-                            {(user?.isClubMember || user?.loyaltyPoints > 0 || user?.loyalty_points > 0) && (
+                            {user?.isClubMember && (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#fdf4d6] dark:bg-[#252118] text-primary border border-primary/20 rounded text-[10px] uppercase tracking-widest font-black">
                                     Club Member
                                 </span>

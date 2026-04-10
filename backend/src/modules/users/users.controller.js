@@ -16,8 +16,8 @@ export async function getUserProfile(req, res) {
         user.referral_code = newCode;
     }
 
-    // Implicit Club Membership logic based on engagement
-    const isClubMember = (user.loyalty_points && user.loyalty_points > 0);
+    // Club Membership from actual DB column (only true when user pays for membership)
+    const isClubMember = user.is_club_member || false;
 
     return res.status(200).json({
         id: user.id,
@@ -84,6 +84,7 @@ export async function getAdminCustomers(req, res) {
         u.email, 
         u.created_at as joined_date,
         u.loyalty_points,
+        u.is_club_member,
         COUNT(o.id) as total_orders,
         COALESCE(SUM(o.total_amount_cents), 0) as lifetime_value_cents
       FROM users u
@@ -96,7 +97,7 @@ export async function getAdminCustomers(req, res) {
     // Process cluster flags
     const processed = rows.map(r => ({
       ...r,
-      isClubMember: (r.loyalty_points > 0)
+      isClubMember: r.is_club_member || false
     }));
 
     return res.status(200).json({ data: processed });

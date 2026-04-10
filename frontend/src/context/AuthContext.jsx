@@ -14,20 +14,26 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const refreshUser = async () => {
+        const token = localStorage.getItem('amai_token');
+        if (token) {
+            try {
+                const response = await axios.get(`${API_URL}/auth/session`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setUser(response.data.user);
+                return response.data.user;
+            } catch (error) {
+                localStorage.removeItem('amai_token');
+                setUser(null);
+            }
+        }
+        return null;
+    };
+
     useEffect(() => {
         const checkSession = async () => {
-            const token = localStorage.getItem('amai_token');
-            if (token) {
-                try {
-                    const response = await axios.get(`${API_URL}/auth/session`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    setUser(response.data.user);
-                } catch (error) {
-                    localStorage.removeItem('amai_token');
-                    setUser(null);
-                }
-            }
+            await refreshUser();
             setLoading(false);
         };
         checkSession();
@@ -77,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loginUser, registerUser, loginWithGoogle, logout, loading }}>
+        <AuthContext.Provider value={{ user, refreshUser, loginUser, registerUser, loginWithGoogle, logout, loading }}>
             {!loading && children}
         </AuthContext.Provider>
     );

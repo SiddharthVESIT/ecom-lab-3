@@ -239,7 +239,7 @@ const Auth = () => {
                             type="submit"
                             disabled={loading}
                         >
-                            {loading ? 'Authenticating...' : (isLogin ? 'Sign In' : 'Join the Club')}
+                            {loading ? 'Authenticating...' : (isLogin ? 'Sign In' : 'Register')}
                         </button>
                         <button onClick={handleGoogleLogin} className="flex items-center justify-center gap-2 rounded-xl border border-border-subtle h-12 hover:bg-gray-50 transition-colors" type="button">
                             <span className="text-sm font-bold">Continue with Google</span>

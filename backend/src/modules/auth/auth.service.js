@@ -49,7 +49,8 @@ export async function registerUser({ fullName, email, password, referralCodeUsed
       role: user.role, 
       flavorProfile: user.flavor_profile,
       loyaltyPoints: user.loyalty_points,
-      referralCode: user.referral_code
+      referralCode: user.referral_code,
+      isClubMember: user.is_club_member || false
     }, 
     token 
   };
@@ -77,7 +78,8 @@ export async function loginUser({ email, password }) {
       role: user.role,
       flavorProfile: user.flavor_profile,
       loyaltyPoints: user.loyalty_points,
-      referralCode: user.referral_code
+      referralCode: user.referral_code,
+      isClubMember: user.is_club_member || false
     }
   };
 }
@@ -113,6 +115,7 @@ export async function loginWithGoogleToken(idToken) {
         flavorProfile: user.flavor_profile,
         loyaltyPoints: user.loyalty_points,
         referralCode: user.referral_code,
+        isClubMember: user.is_club_member || false,
         picture: picture || null
       }
     };
